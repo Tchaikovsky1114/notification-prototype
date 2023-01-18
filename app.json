@@ -21,13 +21,24 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.swadpia.notificationprototype"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ],
+    "googleServicesFile": "./google-services.json",
+    "extra": {
+      "eas": {
+        "projectId": "ebc8b7f7-8735-49b9-bd32-626d3629b62f"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "owner": "sungwonadpia"
   }
 }
