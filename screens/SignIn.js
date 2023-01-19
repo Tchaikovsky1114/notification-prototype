@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import useUserInfo from '../hooks/useUserInfo';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
+import ExtraData from '../components/ExtraData';
 const { FIREBASE_ANDROID_CLIENT_ID, FIREBASE_WEB_CLIENT_ID } = getEnvVars();
 const provider = new GoogleAuthProvider();
 
@@ -30,24 +31,31 @@ const SignIn = () => {
       const {
         authentication: { accessToken, expiresIn },
       } = response;
+      
       fetchUserInfo(accessToken)
       .then((user) => {
+        // validateEmail(user.email)
+        // => (cloud functions로 보내는 함수 작성)
+        // const userRef = firebase().collection('Users).doc(req.body.email); 
+        // if(user.email === userRef.email){
+        // return status.(201).send({ userInfo: userRef.data }
+        // } else {
+        // return status.(200).send(null);
+        // }
         setUserInfo(user)
       })
         .then(() => {
           storeData('works_access_token', accessToken);
-          storeData('works_token_expires', expiresIn * 1000 + date.getTime());
+          storeData('works_token_expires', (expiresIn * 3000) + date.getTime());
         })
-          .then(() => {
-            navigation.navigate('Home');
-          });
     }
   }, [response]);
-  
+  console.log(userInfo);
 
   return (
     <View style={styles.container}>
-      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      {!userInfo
+      ? <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <Pressable
           onPress={() => promptAsync()}
           style={{
@@ -71,6 +79,8 @@ const SignIn = () => {
           <Text style={{fontSize:18,color:'#319F4F'}}>Sign-up with Google</Text>
         </Pressable>
       </View>
+      : <ExtraData />  
+    }
     </View>
   );
 };
