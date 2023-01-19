@@ -1,37 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import auth from '@react-native-firebase/auth';
+// import * as WebBrowser from 'expo-web-browser';
+import { Button } from 'react-native';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth'
+// WebBrowser.maybeCompleteAuthSession();
+
 import { useEffect, useState } from 'react';
 
+
+
 export default function App() {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setuser] = useState();
 
-  function onAuthStateChanged(user) {
-    setuser(user);
-    if (initializing) setInitializing(false);
-  }
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   webClientId: '478430295721-oiuh4coudrj98km8ie77clj4pfrntets.apps.googleusercontent.com',
+  //   androidClientId: '478430295721-oiuh4coudrj98km8ie77clj4pfrntets.apps.googleusercontent.com',
+  //   iosClientId: '478430295721-i2snov6f7d7dtj0p43h55lidfs4n8kuj.apps.googleusercontent.com'
+  // })
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
 
-  if (initializing) return null;
 
-  if (!user) {
-    return (
-      <View>
-        <Text>Login</Text>
-        <Pressable onPress={() => {}}>
-          <Text>구글로그인</Text>
-        </Pressable>
-      </View>
-    );
-  }
+  // useEffect(() => {
+  //   if(response.type === 'success') {
+  //     const { authentication } = response;
+  //   }
+  // }, [response]);
+
   return (
     <View>
-      <Text>Welcome {user.email}</Text>
+      <Text>wqkqlr;kq;lrkq;lwkqw</Text>
     </View>
   );
 }
