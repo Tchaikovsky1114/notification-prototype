@@ -30,8 +30,7 @@
       "package": "com.swadpia.notificationprototype"
     },
     "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      
     ],
     "googleServicesFile": "./google-services.json",
     "extra": {

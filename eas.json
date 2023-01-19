@@ -6,6 +6,8 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "extends":"development"
+    }
   }
 }
