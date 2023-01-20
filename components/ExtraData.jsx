@@ -17,19 +17,21 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
 import { ScrollView } from 'react-native-gesture-handler';
 import useUserInfo from '../hooks/useUserInfo';
+import { pushTokenState } from '../recoil/pushtoken';
 
 
 const ExtraData = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const { fetchRegisterExtraUserData } = useUserInfo()
+  const { fetchRegisterExtraUserData } = useUserInfo();
+  const [pushToken,setPushToken] = useRecoilState(pushTokenState);
   const [inputValue, setInputValue] = useState({
     department: '',
     position: '',
-    employeeName: '',
+    name: '',
     email: '',
-    id: 0,
+    id: 0
   });
   
   const inputChangeHandler = (e, name) => {
@@ -40,30 +42,31 @@ const ExtraData = () => {
       ...prev,
       [name]: text,
     }));
-    console.log(inputValue);
   };
   
   const registerUserHandler = async () => {
     for(let value in inputValue) {
       if(!value) return;
     }
-    await fetchRegisterExtraUserData(inputValue)
-    .then(() => navigation.navigate('Home'))
-    .catch((err) => Alert.alert(err.error));
-    
+    try {
+      await fetchRegisterExtraUserData({...inputValue,pushToken});
+      navigation.navigate('Home')
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {
     if (!userInfo) return;
     setInputValue((prev) => ({
       ...prev,
-      employeeName: userInfo.name,
+      name: userInfo.name,
       email: userInfo.email,
       id: userInfo.sub,
     }));
   }, [userInfo]);
 
-
+  // console.log({...inputValue,pushToken});
 
 
   useEffect(() => {
@@ -97,8 +100,8 @@ const ExtraData = () => {
             />
             <RegisterInput
               onChange={inputChangeHandler}
-              value={inputValue.employeeName}
-              name="employeeName"
+              value={inputValue.name}
+              name="name"
               placeholder="성함"
               title="성함"
             />

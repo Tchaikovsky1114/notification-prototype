@@ -1,23 +1,64 @@
-import { Alert } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import SignIn from './screens/SignIn';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useUserInfo from './hooks/useUserInfo';
-import { useEffect, useLayoutEffect, useRef } from 'react';
-import { navigate } from './rootNavigation';
+import { useEffect, useLayoutEffect, useRef,useState } from 'react';
 import { userInfoState } from './recoil/userInfo';
 import { useRecoilState } from 'recoil';
 import HomeScreen from './screens/HomeScreen';
-import { storeData } from './util/storeLocalData';
+import { pushTokenState } from './recoil/pushtoken';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+const registerForPushNotification = async (userId) => {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync({experienceId: "@swadpia/notification-prototype"})).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+  return token;
+};
 const Stack = createNativeStackNavigator();
 let date = new Date();
 
 const Main = () => {
+  const [expoPushToken, setExpoPushToken] = useRecoilState(pushTokenState);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [notification, setNotification] = useState();
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const { fetchUserInfo,fetchVerifyingEmail } = useUserInfo();
+
   const navigationRef = useRef(null);
 
   /**테스트용 localStorage Clear 함수 */
@@ -28,73 +69,37 @@ const Main = () => {
   //   test();
   // },[])
 
-  // useLayoutEffect(() => {
-  //   const getStoredToken = async () => {
-  //     const token = await AsyncStorage.getItem('works_access_token');
-  //     const expiresIn = await AsyncStorage.getItem('works_token_expires');
-  //     if (!token) return;
-  //     if (expiresIn < date.getTime()) {
-  //       await AsyncStorage.clear().then(() => {
-  //         Alert.alert(
-  //           '토큰의 유효기간이 만료되었습니다',
-  //           '로그인 페이지로 이동합니다.'
-  //         );
-  //         navigate('SignIn');
-  //       });
-  //     } else {
-  //       fetchUserInfo(token)
-  //         .then((user) => {
-  //           fetchVerifyingEmail(user).then((result) => {
-  //             console.log('result', result);
-  //             if (result.status === 200) {
-  //               setUserInfo(result.user);
-  //               // navigate('SignIn');
-  //             }
-  //             if (result.status === 201) {
-  //               setUserInfo(result.user);
-  //               // navigate('Home');
-  //             }
-  //           });
-  //         })
-  //         .then(() => {
-  //           storeData('works_access_token', token);
-  //           storeData('works_token_expires', expiresIn * 3000 + date.getTime());
-  //         })
-  //         .catch((err) => console.error(err));
-  //     }
-  //   };
-  //   getStoredToken();
-  // }, []);
-  console.log('userInfo',userInfo);
-  // fetchUserInfo(accessToken)
-  // .then(async (user) => {
-  //   await fetchVerifyingEmail(user);
-  // })
-  // .then((result) => {
-  //   console.log('result', result);
-  //   if(result.message.substr(0,1) === '첫') {
-  //     setUserInfo(result.user);
-  //     navigate('SignIn');
-  //   }
-  //   if(result.message.substr(0,1) === '가') {
-  //     setUserInfo(result.user);
-  //     navigate('Home');
-  //   }
-  // })
-  // .then(() => {
-  //   storeData('works_access_token', accessToken);
-  //   storeData('works_token_expires', expiresIn * 3000 + date.getTime());
-  // })
 
-  // 1. 회원가입을 했다면(firestore에 등록) SignIn으로 이동하지 않게끔 분기처리 해줘야 함.
-  // 2.(userflow - 최초가입시) google auth 로그인 - 추가 정보 작성 - 파이어베이스 등록 - 홈화면
-  // 3.(userflow - 이미가입시) google auth 로그인 - user collection에서 존재하는 이메일 확인 - 전역변수에 유저 정보 저장
+  useEffect(() => {
+    registerForPushNotification().then((token) => {
+      setExpoPushToken(token);
+      if (token) {
+       
+      }
+    });
+    console.log('expoPushToken',expoPushToken);
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener(setNotification);
 
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        setNotification(response.notification);
+      });
+
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
       
-        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignIn" component={SignIn}  />
         <Stack.Screen name="Home" component={HomeScreen} />  
       </Stack.Navigator>
     </NavigationContainer>

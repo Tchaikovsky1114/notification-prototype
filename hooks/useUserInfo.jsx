@@ -27,9 +27,10 @@ const fetchRegisterExtraUserData = async (userInfo) => {
       body: JSON.stringify(userInfo),
     })
     const data = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
-    console.error(error);
+    console.error(error.error);
   }
 }
 const fetchVerifyingEmail = async (user) => {

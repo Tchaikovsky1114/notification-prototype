@@ -10,9 +10,11 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   // databaseURL: "https://notification-aa618-default-rtdb.firebaseio.com"
 })
-const db = functions.firestore;
+// const db = functions.firestore;
 
 exports.registerUser = regionalFunctions.https.onRequest(createUser);
 exports.verifyingEmail = regionalFunctions.https.onRequest(verifyingEmail);
-// exports.welcomeUserNotification = db.document('Users/').onCreate()
+// exports.welcomeUserNotification = db.document('/Users/{userEmail}').onCreate(
+  
+// )
 
