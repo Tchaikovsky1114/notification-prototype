@@ -55,7 +55,8 @@ const SignIn = () => {
                 email: result.email,
                 name: result.name,
                 department: result.department,
-                position: result.position, 
+                position: result.position,
+                pushToken: result.pushToken
               }));
               navigation.navigate('Home');
             }

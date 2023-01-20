@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const { Expo } = require('expo-server-sdk');
 
+const expo = new Expo();
 
 export const sendPushNotifications = (pushTokens,message,title) => {
     const expoPushMessages = pushTokens.map((pushToken) => ({
@@ -10,6 +11,6 @@ export const sendPushNotifications = (pushTokens,message,title) => {
         to: pushToken,
       }));
 
-    const expo = new Expo();
+
     return expo.sendPushNotificationsAsync(expoPushMessages);
    };
