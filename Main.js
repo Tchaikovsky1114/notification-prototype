@@ -10,16 +10,15 @@ import { navigate } from './rootNavigation';
 import { userInfoState } from './recoil/userInfo';
 import { useRecoilState } from 'recoil';
 import HomeScreen from './screens/HomeScreen';
-
+import { storeData } from './util/storeLocalData';
 
 const Stack = createNativeStackNavigator();
 let date = new Date();
 
 const Main = () => {
-  const [userInfo,setUserInfo] = useRecoilState(userInfoState);
-  const { fetchUserInfo } = useUserInfo();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const { fetchUserInfo,fetchVerifyingEmail } = useUserInfo();
   const navigationRef = useRef(null);
-  
 
   /**테스트용 localStorage Clear 함수 */
   // const test = async () => {
@@ -29,44 +28,77 @@ const Main = () => {
   //   test();
   // },[])
 
-
-  useLayoutEffect(() => {
-    const getStoredToken = async () => {
-      const token = await AsyncStorage.getItem('works_access_token');
-      const expiresIn = await AsyncStorage.getItem('works_token_expires');
-      if(!token) return;
-      if(expiresIn < date.getTime()){
-        
-        await AsyncStorage.clear().then(() => {
-          Alert.alert('토큰의 유효기간이 만료되었습니다','로그인 페이지로 이동합니다.');
-          navigate('SignIn');
-        })
-      }else{
-        fetchUserInfo(token)
-        .then((user) => setUserInfo(user))
-          .then(() => {
-            navigate('Home');
-          });
-      }
-    }
-    getStoredToken();
-  },[])
+  // useLayoutEffect(() => {
+  //   const getStoredToken = async () => {
+  //     const token = await AsyncStorage.getItem('works_access_token');
+  //     const expiresIn = await AsyncStorage.getItem('works_token_expires');
+  //     if (!token) return;
+  //     if (expiresIn < date.getTime()) {
+  //       await AsyncStorage.clear().then(() => {
+  //         Alert.alert(
+  //           '토큰의 유효기간이 만료되었습니다',
+  //           '로그인 페이지로 이동합니다.'
+  //         );
+  //         navigate('SignIn');
+  //       });
+  //     } else {
+  //       fetchUserInfo(token)
+  //         .then((user) => {
+  //           fetchVerifyingEmail(user).then((result) => {
+  //             console.log('result', result);
+  //             if (result.status === 200) {
+  //               setUserInfo(result.user);
+  //               // navigate('SignIn');
+  //             }
+  //             if (result.status === 201) {
+  //               setUserInfo(result.user);
+  //               // navigate('Home');
+  //             }
+  //           });
+  //         })
+  //         .then(() => {
+  //           storeData('works_access_token', token);
+  //           storeData('works_token_expires', expiresIn * 3000 + date.getTime());
+  //         })
+  //         .catch((err) => console.error(err));
+  //     }
+  //   };
+  //   getStoredToken();
+  // }, []);
+  console.log('userInfo',userInfo);
+  // fetchUserInfo(accessToken)
+  // .then(async (user) => {
+  //   await fetchVerifyingEmail(user);
+  // })
+  // .then((result) => {
+  //   console.log('result', result);
+  //   if(result.message.substr(0,1) === '첫') {
+  //     setUserInfo(result.user);
+  //     navigate('SignIn');
+  //   }
+  //   if(result.message.substr(0,1) === '가') {
+  //     setUserInfo(result.user);
+  //     navigate('Home');
+  //   }
+  // })
+  // .then(() => {
+  //   storeData('works_access_token', accessToken);
+  //   storeData('works_token_expires', expiresIn * 3000 + date.getTime());
+  // })
 
   // 1. 회원가입을 했다면(firestore에 등록) SignIn으로 이동하지 않게끔 분기처리 해줘야 함.
   // 2.(userflow - 최초가입시) google auth 로그인 - 추가 정보 작성 - 파이어베이스 등록 - 홈화면
   // 3.(userflow - 이미가입시) google auth 로그인 - user collection에서 존재하는 이메일 확인 - 전역변수에 유저 정보 저장
-  
+
   return (
     <NavigationContainer ref={navigationRef}>
-       <Stack.Navigator>
-        
+      <Stack.Navigator>
+      
         <Stack.Screen name="SignIn" component={SignIn} />
-        
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator> 
+        <Stack.Screen name="Home" component={HomeScreen} />  
+      </Stack.Navigator>
     </NavigationContainer>
-  )
-}
+  );
+};
 
-export default Main
-
+export default Main;

@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Pressable,
   StyleSheet,
@@ -15,18 +16,20 @@ import RegisterInput from './RegisterInput';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
 import { ScrollView } from 'react-native-gesture-handler';
-import { db } from '../firebaseConfig';
+import useUserInfo from '../hooks/useUserInfo';
+
 
 const ExtraData = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-
+  const { fetchRegisterExtraUserData } = useUserInfo()
   const [inputValue, setInputValue] = useState({
     department: '',
     position: '',
     employeeName: '',
     email: '',
+    id: 0,
   });
   
   const inputChangeHandler = (e, name) => {
@@ -41,9 +44,12 @@ const ExtraData = () => {
   };
   
   const registerUserHandler = async () => {
-    for(value of inputValue) {
+    for(let value in inputValue) {
       if(!value) return;
     }
+    await fetchRegisterExtraUserData(inputValue)
+    .then(() => navigation.navigate('Home'))
+    .catch((err) => Alert.alert(err.error));
     
   }
 
@@ -53,8 +59,16 @@ const ExtraData = () => {
       ...prev,
       employeeName: userInfo.name,
       email: userInfo.email,
+      id: userInfo.sub,
     }));
   }, [userInfo]);
+
+
+
+
+  useEffect(() => {
+    
+  } ,[])
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -97,7 +111,7 @@ const ExtraData = () => {
             />
           </View>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={registerUserHandler}
             activeOpacity={0.78}
             style={{
               width,
