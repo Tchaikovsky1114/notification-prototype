@@ -11,7 +11,7 @@ module.exports = async function(req, res) {
 
   snapshot.forEach((doc) => {
     if(doc.data().email === email){
-      throw Error({ error: '중복된 이메일이 존재합니다.' });
+      return res.send({ error: '중복된 이메일이 존재합니다.' });
     }
   })
 

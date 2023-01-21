@@ -79,7 +79,10 @@ const Main = () => {
     });
     console.log('expoPushToken',expoPushToken);
     notificationListener.current =
-      Notifications.addNotificationReceivedListener(setNotification);
+      Notifications.addNotificationReceivedListener((notification) => {
+        // setNotification(notification)
+        console.log(notification);
+      });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
@@ -100,7 +103,15 @@ const Main = () => {
       <Stack.Navigator>
       
         <Stack.Screen name="SignIn" component={SignIn}  />
-        <Stack.Screen name="Home" component={HomeScreen} />  
+        <Stack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerBackVisible: false,
+            headerTitleAlign:'center',
+            headerTitle: '홈'
+          }}
+        />  
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -33,7 +33,13 @@
       
     },
     "plugins": [
-
+      [
+        "expo-notifications",
+        {
+          "icon":"./assets/swadpia.png",
+          "color":"#ffffff"
+        }
+      ]
     ],
     "googleServicesFile": "./google-services.json",
     "extra": {

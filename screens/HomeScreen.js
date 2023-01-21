@@ -1,19 +1,31 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../recoil/userInfo'
+import { pushTokenState } from '../recoil/pushtoken'
+import useUserInfo from '../hooks/useUserInfo'
+import RichTextEditor from '../components/RichTextEditor'
 
 const HomeScreen = () => {
+  const { fetchVerifyingToken } = useUserInfo();
+  const [isVerified,setIsVerified] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
 
-  console.log(userInfo);
+  
+  useEffect(() => {
+    if(isVerified) return;
+      fetchVerifyingToken();
+      setIsVerified(true)  
+  }, [])
+  
   return (
     <View style={styles.container}>
-      <Text>{userInfo.name}</Text>
-      <Text>{userInfo.email}</Text>
+      <RichTextEditor />
     </View>
   )
 }
+
+
 
 export default HomeScreen
 
