@@ -1,16 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useRef } from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useRef, useState } from 'react'
 import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
 
 const RichTextEditor = () => {
   const richText = useRef(null);
+  const [inputValue, setInputvalue] = useState('');
+  const [isEmpty,setIsEmpty] = useState(true);
+  const richTextHandler = (text) => {
+    if(text) {
+      setInputvalue(text)
+      setIsEmpty(false);
+      console.log(inputValue);
+    }else{
+      setIsEmpty(true);
+    }
+  }
   return (
     <>
     <RichToolbar
    editor={richText}
-   selectedIconTint="#873c1e"
+   selectedIconTint="#2d63e2"
    iconTint="#312921"
    actions={[
+    actions.undo,
+    actions.redo,
      actions.setBold,
      actions.setItalic,
      actions.insertBulletsList,
@@ -18,17 +31,22 @@ const RichTextEditor = () => {
      actions.insertLink,
      actions.setStrikethrough,
      actions.setUnderline,
+     
    ]}
    style={styles.richTextToolbarStyle}
   />
     <RichEditor
       ref={richText} // from useRef()
       // onChange={richTextHandle}
-      placeholder="Write your cool content here :)"
+      placeholder="공지사항 내용을 작성해주세요."
       androidHardwareAccelerationDisabled={true}
       style={styles.richTextEditorStyle}
       initialHeight={250}
+      onChange={richTextHandler}
     />
+    <Pressable>
+      <Text>글쓰기</Text>
+    </Pressable>
     </>
   )
 }
@@ -84,8 +102,8 @@ const styles = StyleSheet.create({
   },
 
   richTextToolbarStyle: {
-    backgroundColor: "#c6c3b3",
-    borderColor: "#c6c3b3",
+    backgroundColor: "#ffa",
+    borderColor: "#ffa",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     borderWidth: 1,
