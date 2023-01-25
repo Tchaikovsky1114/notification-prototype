@@ -12,7 +12,14 @@ const tagStyles = {
     width: deviceWidth > 330 ? 360 : 300,
     padding:32,
     marginTop:16,
-    fontSize:24
+    fontSize:20
+  },
+  img: {
+    width: deviceWidth > 330 ? 250 : 330,
+  },
+  b: {
+    fontWeight:'bold',
+    fontSize:22,
   }
 }
 

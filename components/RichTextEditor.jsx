@@ -12,6 +12,10 @@ import { KeyboardAvoidingView } from 'react-native';
 import { manipulateAsync,SaveFormat } from 'expo-image-manipulator';
 import { storage } from '../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+
+
+
 const RichTextEditor = () => {
   const richText = useRef(null);
   const [inputValue, setInputvalue] = useState('');
@@ -21,7 +25,7 @@ const RichTextEditor = () => {
   const { fetchNotice } = useNotice();
   const [isShow,setIsShow] = useRecoilState(writeNoticeModalState);
   const [image,setImage] = useState('');
-
+  const [totalImages,setTotalImages] = useState([]);
   const richTextHandler = (text) => {
     if(text) {
       setInputvalue(text)
@@ -44,7 +48,8 @@ const RichTextEditor = () => {
       writer:userInfo.name,
       position: userInfo.position,
       email:userInfo.email,
-      department:userInfo.department
+      department:userInfo.department,
+      totalImages: totalImages
     });
     setIsShow(false);
   }
@@ -52,7 +57,7 @@ const RichTextEditor = () => {
   const uploadImage = async(uri,imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    const storageRef = ref(storage, `${imageName}`);
+    const storageRef = ref(storage, imageName);
     await uploadBytes(storageRef, blob).then((snapshot) => {
       console.log('uploaded a blob or file!');
     })
@@ -69,16 +74,18 @@ const RichTextEditor = () => {
         allowsEditing: true,
         aspect: [1,1],
         quality: 1,
-        base64:true,
+        // base64:true,
       })
-      
-      // console.log(result);
+
       if(!result.canceled){
-        const time = new Date().toISOString();
-        const storageRef = ref(storage, `Images/${time}`)
-        await uploadImage(result.assets[0].uri,`${time}`)
-        .then(() => {
-           return getDownloadURL(ref(storage,`${time}`));
+        const offset = 1000 * 60 * 60 * 9;
+        const koreaTime = new Date((new Date()).getTime() + offset).toISOString().replace("T"," ").split('.')[0];
+        
+        const storageRef = ref(storage,`images/${userInfo.name}/${koreaTime}`);
+        await uploadImage(result.assets[0].uri,`images/${userInfo.name}/${koreaTime}`)
+        .then(async () => {
+          const downloadUrl = await getDownloadURL(storageRef);
+          return downloadUrl;
         })
         .then((url) => {
           console.log('==get download URL==',url);
@@ -89,12 +96,14 @@ const RichTextEditor = () => {
 
   useEffect(() => {
     if(!image) return;
-    
-    
+    setTotalImages((prev) => [...prev,image]);
+    // 2번째 인자는 style.
+    richText.current?.insertImage(image);
   }, [image]);
 
-  console.log(image);
+  // console.log(totalImages);
   // console.log(inputValue);
+  console.log(userInfo.name);
 
   return (
     <Modal visible={isShow} onRequestClose={() => setIsShow(false)}>

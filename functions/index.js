@@ -51,7 +51,7 @@ exports.noticeUserNotification = regionalFunctions.firestore
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
         tickets.push(...ticketChunk);
     } catch (error) {
-      console.error(error);
+      return null;
     }
   }
 
@@ -85,7 +85,7 @@ exports.welcomeUserNotification = regionalFunctions.firestore
       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
       tickets.push(...ticketChunk);
     } catch (error) {
-      console.error(error);
+      return null;
     }
   }
 })
