@@ -6,6 +6,8 @@ const createUser = require("./createUser");
 const verifyingEmail = require("./verifyingEmail");
 const { Expo } = require("expo-server-sdk");
 const verifyingToken = require("./verifyingToken");
+const createNotice = require("./createNotice");
+const getNotices = require("./getNotices");
 
 
 admin.initializeApp({
@@ -18,8 +20,42 @@ const db = admin.firestore();
 exports.registerUser = regionalFunctions.https.onRequest(createUser);
 exports.verifyingEmail = regionalFunctions.https.onRequest(verifyingEmail);
 exports.verifyingToken = regionalFunctions.https.onRequest(verifyingToken);
+exports.createNotice = regionalFunctions.https.onRequest(createNotice);
+exports.getNotices = regionalFunctions.https.onRequest(getNotices);
 
+exports.noticeUserNotification = regionalFunctions.firestore
+.document('Notice/{noticeId}')
+.onCreate(async (snap, context) => {
+  let expo = new Expo();
+  const notice = snap.data();
+  let messages = [];
+  let tickets = [];
 
+  const users = await admin.firestore().collection('User').get();
+  users.forEach((doc) => {
+    const token = doc.data().pushToken;
+    if(token) {
+      messages.push({
+        to: token,
+        sound: 'default',
+        priority: 'high',
+        title: `공지사항이 등록되었습니다.`,
+        body: `${notice.title}을 확인해주세요`,
+        channelId:'default'
+      })
+    }
+  })
+  let chunks = expo.chunkPushNotifications(messages);
+  for(let chunk of chunks) {
+    try {
+        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        tickets.push(...ticketChunk);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+})
 exports.welcomeUserNotification = regionalFunctions.firestore
 .document('User/{userId}')
 .onCreate(async (snap, context) => {
@@ -38,7 +74,8 @@ exports.welcomeUserNotification = regionalFunctions.firestore
         sound: 'default',
         priority:'high',
         title:`${user.name}님이 새로 가입하셨어요`,
-        body: `${user.name}님의 이메일은 ${user.email}입니다.`
+        body: `${user.name}님의 이메일은 ${user.email}입니다.`,
+        channelId:'default'
       })
     }
   })
@@ -53,3 +90,6 @@ exports.welcomeUserNotification = regionalFunctions.firestore
   }
 })
 
+// exports.subscriptionNotice = admin.firestore().collection('Notice').onSnapshot(( snapshot ) => {
+//   console.log(`Received querySnapshot of size ${snapshot.docs()}`)
+// },(error) => console.log(error))
