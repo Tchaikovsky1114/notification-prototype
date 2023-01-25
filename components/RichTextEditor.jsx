@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Modal, Pressable, StyleSheet, Text, View,ScrollView } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -6,8 +6,12 @@ import { writeNoticeModalState } from '../recoil/writeNoticeModal';
 import { TextInput } from 'react-native-gesture-handler';
 import useNotice from '../hooks/useNotice';
 import { userInfoState } from '../recoil/userInfo';
-import { ScrollView } from 'react-native';
-
+import * as ImagePicker from 'expo-image-picker';
+import { useEffect } from 'react';
+import { KeyboardAvoidingView } from 'react-native';
+import { manipulateAsync,SaveFormat } from 'expo-image-manipulator';
+import { storage } from '../firebaseConfig';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const RichTextEditor = () => {
   const richText = useRef(null);
   const [inputValue, setInputvalue] = useState('');
@@ -16,12 +20,13 @@ const RichTextEditor = () => {
   const [isEmpty,setIsEmpty] = useState(true);
   const { fetchNotice } = useNotice();
   const [isShow,setIsShow] = useRecoilState(writeNoticeModalState);
-  const [imageUrl,setImageUrl] = useState('');
+  const [image,setImage] = useState('');
+
   const richTextHandler = (text) => {
     if(text) {
       setInputvalue(text)
       setIsEmpty(false);
-      console.log(inputValue);
+      // console.log(inputValue);
     }else{
       setIsEmpty(true);
     }
@@ -29,6 +34,7 @@ const RichTextEditor = () => {
   const changeTitleHandler = (text) => {
     setTitle(text);
   }
+
 
   const submitNoticeHandler = () => {
     // fetchNotice(title,inputValue)
@@ -42,17 +48,59 @@ const RichTextEditor = () => {
     });
     setIsShow(false);
   }
-  const addImageHandler = () => {
-    if(!richText.current) return;
-    console.log('add');
-    richText.current.insertImage(
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png"
-    );
+
+  const uploadImage = async(uri,imageName) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const storageRef = ref(storage, `${imageName}`);
+    await uploadBytes(storageRef, blob).then((snapshot) => {
+      console.log('uploaded a blob or file!');
+    })
+    // const storageRef = ref(storage,`${imageName}`);
+    
   }
-  console.log(userInfo);
+
+  const addImageHandler = async () => {
+    const { status } = ImagePicker.requestMediaLibraryPermissionsAsync();
+    if(!richText.current || !status === 'granted') return;
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1,1],
+        quality: 1,
+        base64:true,
+      })
+      
+      // console.log(result);
+      if(!result.canceled){
+        const time = new Date().toISOString();
+        const storageRef = ref(storage, `Images/${time}`)
+        await uploadImage(result.assets[0].uri,`${time}`)
+        .then(() => {
+           return getDownloadURL(ref(storage,`${time}`));
+        })
+        .then((url) => {
+          console.log('==get download URL==',url);
+          setImage(url);
+        });
+      }
+  }
+
+  useEffect(() => {
+    if(!image) return;
+    
+    
+  }, [image]);
+
+  console.log(image);
+  // console.log(inputValue);
+
   return (
     <Modal visible={isShow} onRequestClose={() => setIsShow(false)}>
+      <KeyboardAvoidingView>
       <ScrollView contentContainerStyle={{paddingHorizontal:8}}>
+        
       <View style={{height:72,marginTop:40}}>
         <TextInput
           value={title}
@@ -85,14 +133,15 @@ const RichTextEditor = () => {
       placeholder="공지사항 내용을 작성해주세요."
       androidHardwareAccelerationDisabled={true}
       style={styles.richTextEditorStyle}
-      initialHeight={400}
+      initialHeight={900}
       onChange={richTextHandler}
     />
-    
+   
     </ScrollView>
+    </KeyboardAvoidingView>
     <Pressable
     onPress={submitNoticeHandler}
-    style={{height:53,position:'absolute',bottom:10,width:'100%',backgroundColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
+    style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
     >
       <Text style={{fontSize:24,textAlign:'center',color:'#fff'}}>게시하기</Text>
     </Pressable>

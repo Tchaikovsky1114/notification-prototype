@@ -39,6 +39,12 @@
           "icon":"./assets/swadpia.png",
           "color":"#ffffff"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "게시글에 사진을 등록하기 위해 접근을 허용하시겠어요?"
+        }
       ]
     ],
     "googleServicesFile": "./google-services.json",
