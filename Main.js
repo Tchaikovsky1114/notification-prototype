@@ -109,7 +109,9 @@ const Main = () => {
           options={{
             headerBackVisible: false,
             headerTitleAlign:'center',
-            headerTitle: '공지사항'
+            headerTitle: '공지사항',
+            headerShadowVisible:false,
+            
           }}
         />  
       </Stack.Navigator>

@@ -37,7 +37,8 @@
     "recoil": "^0.7.6",
     "expo-image-picker": "~14.0.2",
     "expo-media-library": "~15.0.0",
-    "expo-image-manipulator": "~11.0.0"
+    "expo-image-manipulator": "~11.0.0",
+    "@expo/vector-icons": "^13.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

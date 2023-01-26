@@ -9,7 +9,6 @@ import { userInfoState } from '../recoil/userInfo';
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
-import { manipulateAsync,SaveFormat } from 'expo-image-manipulator';
 import { storage } from '../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 

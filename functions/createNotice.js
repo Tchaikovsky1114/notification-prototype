@@ -1,3 +1,4 @@
+const { firestore } = require('firebase-admin');
 const admin = require('firebase-admin');
 
 
@@ -19,9 +20,11 @@ module.exports = async function(req, res) {
     totalImages,
     createdAt:admin.firestore.FieldValue.serverTimestamp(),
     read: 0,
-    like: 0,
+    like: [],
     reply:[]
     
+  }).then((docRef) => {
+    docRef.update({id:docRef.id});
   })
   await res.send({ message:'작성이 완료되었습니다.',status: 200 })
 

@@ -8,6 +8,9 @@ const { Expo } = require("expo-server-sdk");
 const verifyingToken = require("./verifyingToken");
 const createNotice = require("./createNotice");
 const getNotices = require("./getNotices");
+const readNotice = require("./readNotice");
+const controlLikes = require("./controlLikes");
+const createReply = require("./createReply");
 
 
 admin.initializeApp({
@@ -22,6 +25,9 @@ exports.verifyingEmail = regionalFunctions.https.onRequest(verifyingEmail);
 exports.verifyingToken = regionalFunctions.https.onRequest(verifyingToken);
 exports.createNotice = regionalFunctions.https.onRequest(createNotice);
 exports.getNotices = regionalFunctions.https.onRequest(getNotices);
+exports.readNotice = regionalFunctions.https.onRequest(readNotice);
+exports.controlLikes = regionalFunctions.https.onRequest(controlLikes);
+exports.createReply = regionalFunctions.https.onRequest(createReply);
 
 exports.noticeUserNotification = regionalFunctions.firestore
 .document('Notice/{noticeId}')
@@ -40,7 +46,7 @@ exports.noticeUserNotification = regionalFunctions.firestore
         sound: 'default',
         priority: 'high',
         title: `공지사항이 등록되었습니다.`,
-        body: `${notice.title}을 확인해주세요`,
+        body: `[${notice.title}]를 확인해주세요`,
         channelId:'default'
       })
     }

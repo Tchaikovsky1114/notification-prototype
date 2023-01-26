@@ -8,13 +8,14 @@ import RichTextEditor from '../components/RichTextEditor'
 
 import { writeNoticeModalState } from '../recoil/writeNoticeModal'
 import { firestore } from '../firebaseConfig'
-import { collection, orderBy, query } from '@firebase/firestore'
+import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore'
 import useNotice from '../hooks/useNotice'
 import NoticeCard from '../components/NoticeCard'
 
 const HomeScreen = () => {
   const { fetchVerifyingToken } = useUserInfo();
-  const { getNotices,notices } = useNotice();
+  // const { getNotices,notices } = useNotice();
+  const [notices,setNotices] = useState([]);
   const [isVerified,setIsVerified] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
   const [isShowWriteNoticeModal,setIsShowWriteMoticeModal] = useRecoilState(writeNoticeModalState);
@@ -29,19 +30,41 @@ const HomeScreen = () => {
       setIsVerified(true)  
   }, [])
 
+  // useEffect(() => {
+  //   getNotices();
+  // },[]);
+
   useEffect(() => {
-    getNotices();
-  },[])
-  console.log(notices);
+    const unsubscription = onSnapshot(collection(firestore,'Notice'), (snapshot) => {
+      const ntc = [];
+      snapshot.forEach((doc) => {
+        ntc.push(doc.data());
+      })
+      setNotices(ntc);
+    })
+    return () => unsubscription();
+  }, [])
   return (
     <>
     <RichTextEditor />
     <View style={styles.container}>
       <FlatList
-      keyExtractor={(item) => item.content}
+      keyExtractor={(item) => item.id}
       data={notices}
       extraData={notices}
-      renderItem={({item}) => <NoticeCard title={item.title} content={item.content} />}
+      renderItem={({item}) => <NoticeCard 
+      department={item.department}
+      email={item.email}
+      title={item.title}
+      content={item.content}
+      position={item.position}
+      like={item.like}
+      reply={item.reply}
+      read={item.read}
+      createdAt={item.createdAt}
+      writer={item.writer}
+      id={item.id}
+      />}
       />
       <Pressable
       onPress={toggleWritePageHandler}
