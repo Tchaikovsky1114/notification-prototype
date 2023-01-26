@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": ["NOTIFICATIONS"],
+      "permissions": ["NOTIFICATIONS","WRITE_CONTACTS"],
       "useNextNotificationsApi": true
       
     },

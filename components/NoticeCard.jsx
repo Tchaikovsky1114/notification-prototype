@@ -7,7 +7,8 @@ import {
   Dimensions,
   TextInput,
   TouchableWithoutFeedback,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import React, { useState } from 'react';
 import RenderHTML from 'react-native-render-html';
@@ -53,7 +54,7 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
   const userInfo = useRecoilValue(userInfoState);
   const [isMyLike,setIsMyLike] = useState(like.findIndex((item) => item === userInfo.email) >= 0);
   const [replyValue,setReplyValue] = useState();
-
+  const [isLoading,setIsLoading] = useState(false);
   const toggleContentHandler = () => {
     setIsContentShow((prev) => !prev);
     readNotice(id);
@@ -67,6 +68,7 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
     setReplyValue(text);
   }
   const submitReplyHandler = () => {
+    setIsLoading(true);
     const replyObj = {
       id,
       name:userInfo.name,
@@ -75,7 +77,12 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
       department:userInfo.department,
       position:userInfo.position
     }
-    createReply(replyObj);
+    createReply(replyObj).then(() => {
+      setIsLoading(false);
+      setReplyValue('');
+    });
+    
+    
   }
   console.log(reply[0] ? reply[0] : null);
   return (
@@ -158,17 +165,19 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
           style={{
             backgroundColor:'#fff',
             padding:16,borderWidth:1,borderRadius:4, borderColor:'#2d63e2',width:'80%'}} placeholder=" 댓글을 적어주세요" />
-        <View style={{justifyContent:'space-between',height:96}}>
-          <Pressable
+        <View style={{justifyContent:'center',height:96}}>
+          <TouchableOpacity
+          activeOpacity={0.5}
           onPress={submitReplyHandler}
+          disabled={isLoading}
           style={{borderWidth:1, borderColor:'#2d63e2',borderRadius:4,padding:8,backgroundColor:'#fff'}}>
-          <Text>작성하기</Text>
-          </Pressable>
-          <Pressable
+          {isLoading ?  <ActivityIndicator /> : <Text>작성하기</Text>}
+          </TouchableOpacity>
+          {/* <Pressable
           onPress={() => {}}
           style={{borderWidth:1, borderColor:'red',borderRadius:4,padding:8,backgroundColor:'#fff'}}>
           <Text>취소하기</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
         </View>
         </View>
