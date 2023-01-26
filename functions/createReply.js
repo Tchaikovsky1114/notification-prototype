@@ -10,7 +10,7 @@ module.exports = async function (req,res) {
     reply: admin.firestore.FieldValue.arrayUnion({
       ...req.body,
       id:Math.floor(Math.random() * Date.now()).toString(16),
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.Timestamp.now(),
 
     })
   })

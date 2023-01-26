@@ -97,21 +97,31 @@ const useNotice = () => {
       console.log('===== error =====', error);
     }
   }
-  const createReply = async ({name,email,reply,department,position}) => {
-    const response = await fetch('https://asia-northeast3-notification-aa618.cloudfunctions.net/createReply',{
-      method:'POST',
-      headers:{
-        Accept:'Application/json',
-        'Content-Type':'Application/json'
-      },
-      body:JSON.stringify({
-        name,
-        email,
-        reply,
-        department,
-        position
+  const createReply = async ({id,name,email,reply,department,position}) => {
+
+    try {
+      const response = await fetch('https://asia-northeast3-notification-aa618.cloudfunctions.net/createReply',{
+        method:'POST',
+        headers:{
+          Accept:'Application/json',
+          'Content-Type':'Application/json'
+        },
+        body:JSON.stringify({
+          id,
+          name,
+          email,
+          reply,
+          department,
+          position
+        })
       })
-    })
+      const data = response.json();
+      console.log(data);
+      return data  
+    } catch (error) {
+      console.error(error);
+    }
+    
   }
   return { fetchNotice, getNotices, readNotice, controlLikes,createReply };
 };

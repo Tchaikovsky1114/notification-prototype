@@ -18,8 +18,6 @@ admin.initializeApp({
   // databaseURL: "https://notification-aa618-default-rtdb.firebaseio.com"
 })
 
-const db = admin.firestore();
-
 exports.registerUser = regionalFunctions.https.onRequest(createUser);
 exports.verifyingEmail = regionalFunctions.https.onRequest(verifyingEmail);
 exports.verifyingToken = regionalFunctions.https.onRequest(verifyingToken);

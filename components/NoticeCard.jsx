@@ -6,6 +6,8 @@ import {
   View,
   Dimensions,
   TextInput,
+  TouchableWithoutFeedback,
+  FlatList
 } from 'react-native';
 import React, { useState } from 'react';
 import RenderHTML from 'react-native-render-html';
@@ -14,6 +16,8 @@ import useNotice from '../hooks/useNotice';
 import { AntDesign } from '@expo/vector-icons';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
+
+import ReplyCard from './ReplyCard';
 
 
 const { width: deviceWidth } = Dimensions.get('window');
@@ -37,9 +41,11 @@ const tagStyles = {
   },
 };
 
+
+
 const NoticeCard = ({title,id,content,department,email,position,like,reply,read,createdAt,writer}) => {
   
-  
+   
   const { width } = useWindowDimensions();
   const [isContentShow, setIsContentShow] = useState(false);
   const { createdTime } = useSeparateTime(createdAt);
@@ -71,9 +77,10 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
     }
     createReply(replyObj);
   }
+  console.log(reply[0] ? reply[0] : null);
   return (
     <View
-      style={{ alignItems: 'center', width: '100%', backgroundColor: '#fff'}}
+      style={{ alignItems: 'center', width: '100%', backgroundColor: '#fff',paddingHorizontal:24}}
       key={id}
     >
       <TouchableOpacity
@@ -91,7 +98,7 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
         <View style={{paddingVertical:2,borderBottomWidth:1, borderBottomColor:'#ccc'}}>
           <Text style={{ fontSize: 18 }}>{title}</Text>
         </View>
-        <View style={{marginVertical:4,justifyContent:'flex-end',alignItems:'flex-end',width:'100%',paddingHorizontal:16}}>
+        <View style={{marginVertical:4,justifyContent:'flex-end',alignItems:'flex-end',width:'100%'}}>
           <Text style={{ fontSize: 14 }}>작성일자: {createdTime.year}년 {createdTime.month}월 {createdTime.day}일 {createdTime.hours}시 {createdTime.minutes}분 {createdTime.seconds}초</Text>
           <Text style={{ fontSize: 14 }}>작성자: {writer}{' '}{position}</Text>
           <Text style={{ fontSize: 14 }}>조회수 {read}</Text>
@@ -105,7 +112,7 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
           contentWidth={width}
           tagsStyles={tagStyles}
         />
-        <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'flex-end',width:'100%',paddingHorizontal:32,marginBottom:8}}>
+        <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'flex-end',width:'100%',marginBottom:8}}>
         <Pressable
         onPress={toggleLikeHandler}
         style={{marginRight:8}}
@@ -117,15 +124,32 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
         </Pressable>
         <Text>{like.length}</Text>
         </View>
-
-        <View style={{justifyContent:'flex-start',alignItems:'flex-start',width:'100%',paddingVertical:16,paddingHorizontal:24, borderBottomWidth:1, borderBottomColor:'#ddd'}}>
-          <Text>댓글(0)</Text>
+        <View style={{marginVertical:16,width:'100%',alignItems:'flex-start'}}>
+          <Text>댓글({reply.length})</Text>
         </View>
-
+        <FlatList
+            keyExtractor={(item) => item.id}
+            data={reply}
+            extraData={reply}
+            renderItem={({item}) =>
+            <ReplyCard
+              id={item.id}
+              createdAt={item.createdAt}
+              department={item.department}
+              email={item.email}
+              name={item.name}
+              position={item.position}
+              reply={item.reply}
+              />}
+            
+            ItemSeparatorComponent={<View style={{height:16}} />}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={true}
+            // ListFooterComponent={<View style={{height:20}} />}
+            />
 
         <View style={{borderWidth:1, borderColor:'#dde',padding:8,borderRadius:4,marginTop:16,backgroundColor:'#f6f9ff'}}>
-        
-        <View style={{width:'90%',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
         <TextInput
           value={replyValue}
           onChangeText={(text) => changeReplyValueHandler(text)}

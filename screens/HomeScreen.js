@@ -49,21 +49,21 @@ const HomeScreen = () => {
     <RichTextEditor />
     <View style={styles.container}>
       <FlatList
-      keyExtractor={(item) => item.id}
-      data={notices}
-      extraData={notices}
-      renderItem={({item}) => <NoticeCard 
-      department={item.department}
-      email={item.email}
-      title={item.title}
-      content={item.content}
-      position={item.position}
-      like={item.like}
-      reply={item.reply}
-      read={item.read}
-      createdAt={item.createdAt}
-      writer={item.writer}
-      id={item.id}
+        keyExtractor={(item) => item.id}
+        data={notices}
+        extraData={notices}
+        renderItem={({item}) => <NoticeCard 
+        department={item.department}
+        email={item.email}
+        title={item.title}
+        content={item.content}
+        position={item.position}
+        like={item.like}
+        reply={item.reply}
+        read={item.read}
+        createdAt={item.createdAt}
+        writer={item.writer}
+        id={item.id}
       />}
       />
       <Pressable
@@ -84,6 +84,6 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container:{
     backgroundColor:'#fff',
-    flex:1,
+    minHeight:'100%'
   }
 })
