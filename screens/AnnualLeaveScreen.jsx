@@ -6,15 +6,31 @@ import moment from 'moment/moment';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+
+/**
+ * 필요한 필드값
+ * joinDate - 나의 입사일
+ * MyAnnual - 현재 나의 연차
+ * totalAnnualLeave - 총 연차휴가
+ * usableAnnualLeave - 사용 가능한 연차휴가
+ * usedAnnualLeave - 사용한 연차 휴가
+ * workDay - (현재일 - 입사일) 날일로 환산
+ * workMonth - (현재일 - 입사일)을 월로 환산 (잔여일 버림)
+ * workyear - (현재일 - 입사일)을 년으로 환산 (잔여일 버림)
+ * 접속할 때마다 계산해서 서버로 upload
+ * workDay % 365 === 1 일때 totalAnnualLeave, usableAnnualLeave, usedAnnualLeave를
+ * 연차에 맞게끔 초기화 후 알맞는 값을 넣어줌.
+ */
+
+
 const AnnualLeaveScreen = () => {
   const [date, setDate] = useState(new Date());
   const [diffDay,setDiffDay] = useState();
   const [diffMonth,setDiffMonth] = useState();
   const [diffYear,setDiffYear] = useState();
-
   const [joinDay,setJoinDay] = useState(0);
   const [isShowCalander,setIsShowCalander] = useState(false);
-
 
   const onChange = (event,selectedDate) => {
     setIsShowCalander(false)
@@ -35,7 +51,7 @@ const AnnualLeaveScreen = () => {
           console.log('다음에 다시할게요 ')
         }, style: 'cancel'}
       ],
-      {cancelable: false}
+      { cancelable: false }
     )
   }
   const storeJoindate = async (joinDate) => {
