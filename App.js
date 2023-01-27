@@ -1,6 +1,6 @@
 import { RecoilRoot, useRecoilState } from 'recoil';
 import Main from './Main';
-
+import { RootSiblingParent } from 'react-native-root-siblings';
 // const appConfig = require('./app.json');
 // const projectId = appConfig?.expo?.extra?.eas?.projectId;
 // const token = (await Notifications.getExpoPushTokenAsync({
@@ -11,9 +11,12 @@ import Main from './Main';
 
 export default function App() {
   
+
   return (
     <RecoilRoot>
-      <Main  />
+      <RootSiblingParent>
+        <Main  />      
+      </RootSiblingParent>
     </RecoilRoot>
   );
 }
