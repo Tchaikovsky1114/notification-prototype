@@ -9,6 +9,15 @@ import HomeScreen from './screens/HomeScreen';
 import { pushTokenState } from './recoil/pushtoken';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AnnualLeaveScreen from './screens/AnnualLeaveScreen';
+import ReportScreen from './screens/ReportScreen';
+import AttendanceScreen from './screens/AttendanceScreen';
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -48,11 +57,109 @@ const registerForPushNotification = async (userId) => {
   return token;
 };
 const Stack = createNativeStackNavigator();
-let date = new Date();
+const Tab = createBottomTabNavigator();
+
+const MainScreen = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName='Notice'
+      screenOptions={ ({route}) => ({
+        tabBarStyle: [{
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 60,
+          display:'flex'
+        },null
+      ],
+        tabBarLabelStyle:{
+          fontSize:14,
+        },
+        tabBarActiveTintColor: '#2d63e2',
+        tabBarInactiveTintColor:'#120a57',
+        tabBarItemStyle: {
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: 5,
+          paddingBottom: 15,
+          height: 70,
+        },
+        // tabBarIconStyle: {
+        //   alignContent: 'center',
+        //   justifyContent: 'center',
+        // },
+        tabBarIcon: ({focused}) => {
+
+          if(route.name === 'Notice') {
+            console.log(route.name);
+            console.log(focused);
+            return focused
+            ? <AntDesign name="notification" size={24} color="#2d63e2" />
+            : <AntDesign name="notification" size={24} color="#120a57" />
+          }
+          
+          if(route.name === 'AnnualLeave') {
+            return focused
+            ? <FontAwesome5 name="umbrella-beach" size={24} color="#2d63e2" />
+            : <FontAwesome5 name="umbrella-beach" size={24} color="#120a57" />
+          }
+
+          if(route.name === 'Report') {
+            return focused
+            ? <SimpleLineIcons name="note" size={24} color="#2d63e2" />
+            : <SimpleLineIcons name="note" size={24} color="#120a57" />
+          }
+
+          if(route.name === 'Attendance') {
+            return focused
+            ? <MaterialCommunityIcons name="chair-school" size={24} color="#2d63e2" />
+            : <MaterialCommunityIcons name="chair-school" size={24} color="#120a57" />
+          }
+        }
+      })
+      }
+    >
+      <Tab.Screen
+      name="Notice"
+      component={HomeScreen}
+      options={{
+        title:'공지사항',
+        headerTitleAlign:'center',
+        headerTitleAllowFontScaling:true,
+        headerTitleStyle:{
+          fontSize:24
+        },
+        headerTitleContainerStyle:{
+          
+          
+        }
+      }}
+      />
+      <Tab.Screen name="AnnualLeave" component={AnnualLeaveScreen} 
+      options={{
+        title:'연차계획',
+        headerTitleAlign:'center',
+      }}
+      />
+      <Tab.Screen name="Report" component={ReportScreen} 
+      options={{
+        title:'보고서 작성',
+        headerTitleAlign:'center',
+      }}
+      />
+      <Tab.Screen name="Attendance" component={AttendanceScreen} 
+      options={{
+        title:'출/퇴근 관리',
+        headerTitleAlign:'center',
+      }}
+      />
+
+    </Tab.Navigator>
+  )
+}
+
 
 const Main = () => {
   const [expoPushToken, setExpoPushToken] = useRecoilState(pushTokenState);
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const [notification, setNotification] = useState();
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -60,15 +167,6 @@ const Main = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const navigationRef = useRef(null);
-
-  /**테스트용 localStorage Clear 함수 */
-  // const test = async () => {
-  //   await AsyncStorage.clear();
-  // }
-  // useLayoutEffect(() => {
-  //   test();
-  // },[])
-
 
   useEffect(() => {
     registerForPushNotification().then((token) => {
@@ -102,17 +200,18 @@ const Main = () => {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
       
-        <Stack.Screen name="SignIn" component={SignIn}  />
+        <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}} />
         <Stack.Screen 
           name="Home"
-          component={HomeScreen}
-          options={{
-            headerBackVisible: false,
-            headerTitleAlign:'center',
-            headerTitle: '공지사항',
-            headerShadowVisible:false,
+          component={MainScreen}
+          options={{headerShown:false}}
+          // options={{
+          //   headerBackVisible: false,
+          //   headerTitleAlign:'center',
+          //   headerTitle: '공지사항',
+          //   headerShadowVisible:false,
             
-          }}
+          // }}
         />  
       </Stack.Navigator>
     </NavigationContainer>

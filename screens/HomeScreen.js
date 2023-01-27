@@ -1,4 +1,4 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { userInfoState } from '../recoil/userInfo'
@@ -9,7 +9,7 @@ import RichTextEditor from '../components/RichTextEditor'
 import { writeNoticeModalState } from '../recoil/writeNoticeModal'
 import { firestore } from '../firebaseConfig'
 import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore'
-import useNotice from '../hooks/useNotice'
+import { Entypo } from '@expo/vector-icons';
 import NoticeCard from '../components/NoticeCard'
 
 const HomeScreen = () => {
@@ -66,12 +66,13 @@ const HomeScreen = () => {
         id={item.id}
       />}
       />
-      <Pressable
+      <TouchableOpacity
+      activeOpacity={0.5}
       onPress={toggleWritePageHandler}
-      style={{width:'100%',justifyContent:'center',alignItems:'center',height:56}}
+      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#120a57',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:60,right:10}}
       >
-        <Text style={{fontSize:24}}>공지 작성하기</Text>
-      </Pressable>
+        <Entypo name="pencil" size={24} color="black" />
+      </TouchableOpacity>
     </View>
     </>
   )
