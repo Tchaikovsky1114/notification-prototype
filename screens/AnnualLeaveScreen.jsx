@@ -81,7 +81,7 @@ const AnnualLeaveScreen = () => {
       />}
     
     <View style={styles.container}>
-      <TouchableOpacity
+      {!joinDay ? <TouchableOpacity
       onPress={() => setIsShowCalander(true)}
       style={{
         height:160,
@@ -94,6 +94,9 @@ const AnnualLeaveScreen = () => {
         <Text style={{fontSize:32,color:'#fff'}}>입사년월을 선택해주세요.</Text>
         <Text style={{color:'#fff'}}>선택 이후에는 수정할 수 없습니다.</Text>
       </TouchableOpacity>
+      : <View>
+        <Text>{moment(joinDay).format('YYYY-MM-DD')}</Text>
+        </View>}
     </View>
     </>
   )
