@@ -11,12 +11,16 @@ const getNotices = require("./getNotices");
 const readNotice = require("./readNotice");
 const controlLikes = require("./controlLikes");
 const createReply = require("./createReply");
+const createAnnualLeave = require("./createAnnualLeave");
+const moment = require('moment');
 
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   // databaseURL: "https://notification-aa618-default-rtdb.firebaseio.com"
 })
+
+const db = admin.firestore();
 
 exports.registerUser = regionalFunctions.https.onRequest(createUser);
 exports.verifyingEmail = regionalFunctions.https.onRequest(verifyingEmail);
@@ -26,6 +30,54 @@ exports.getNotices = regionalFunctions.https.onRequest(getNotices);
 exports.readNotice = regionalFunctions.https.onRequest(readNotice);
 exports.controlLikes = regionalFunctions.https.onRequest(controlLikes);
 exports.createReply = regionalFunctions.https.onRequest(createReply);
+exports.createAnnualLeave = regionalFunctions.https.onRequest(createAnnualLeave);
+
+
+
+
+exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
+  const now = moment();
+  const annualRef = db.collection('Annual');
+  const querySnapshot = await annualRef.get();
+  querySnapshot.forEach(async (doc) => {
+      const data = doc.data();
+      const joinDate = moment(data.joinDate);
+      const diff = now.diff(joinDate, 'years');
+      const diffMonths = now.diff(joinDate, 'months');
+      const diffDays = now.diff(joinDate,'days');
+      if (diff < 1) {
+          data.monthlyLeave = diffMonths;
+      } else if (diff >= 1 && diffDays <= 730) {
+          data.annualLeave = 15;
+      }
+      if (diff > 2) {
+          data.monthlyLeave = 0;
+          if (diff % 2 !== 0) {
+              data.annualLeave++;
+              if (data.annualLeave > 25) {
+                  data.annualLeave = 25;
+              }
+          }
+      }
+      if (diffDays % 365 === 0) {
+          data.usedLeave = 0;
+          data.remainingLeave = data.monthlyLeave + data.annualLeave;
+      }
+      await annualRef.doc(doc.id).set(data,{ merge: true });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.noticeUserNotification = regionalFunctions.firestore
 .document('Notice/{noticeId}')
