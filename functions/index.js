@@ -65,7 +65,13 @@ exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async
           data.usedLeave = 0;
           data.remainingLeave = data.monthlyLeave + data.annualLeave;
       }
-      await annualRef.doc(doc.id).set(data,{ merge: true });
+      await annualRef.doc(doc.id)
+      .set({
+        ...data,
+        availableLeave: data.annualLeave + data.monthlyLeave
+      },
+      { merge: true });
+
   });
 });
 
