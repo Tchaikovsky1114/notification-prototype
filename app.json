@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": []
     },
     "android": {
       "package": "com.swadpia.notificationprototype",
@@ -28,7 +29,7 @@
         "foregroundImage": "./assets/adaptive-icon.jpg",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": ["NOTIFICATIONS","WRITE_CONTACTS"],
+      "permissions": ["NOTIFICATIONS","WRITE_CONTACTS","READ_CALENDAR","WRITE_CALENDAR"],
       "useNextNotificationsApi": true
       
     },

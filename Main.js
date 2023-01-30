@@ -17,6 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AnnualLeaveScreen from './screens/AnnualLeaveScreen';
 import ReportScreen from './screens/ReportScreen';
 import AttendanceScreen from './screens/AttendanceScreen';
+import AnnualDetailScreen from './screens/AnnualDetailScreen';
 
 
 Notifications.setNotificationHandler({
@@ -212,7 +213,11 @@ const Main = () => {
           //   headerShadowVisible:false,
             
           // }}
-        />  
+        />
+        <Stack.Screen
+          name="AnnualLeaveDetail"
+          component={AnnualDetailScreen}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );

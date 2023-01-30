@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { useState } from 'react'
 
 const useAnnualLeave = () => {
-
+  const [annual,setAnnual] = useState();
   const postAnnualLeave = async (annualLeave) => {
     
     try {
@@ -21,13 +20,33 @@ const useAnnualLeave = () => {
       );
       const data = await response.json();
       console.log(data);
+      
       return data;
     } catch (error) {
       
     }
   }
-
-  return { postAnnualLeave }
+  const getAnnualLeave = async(email) => {
+    try {
+      const response = await fetch(
+        `https://asia-northeast3-notification-aa618.cloudfunctions.net/getAnnualLeave?email=${email}`,
+        {
+          method:'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            
+          },
+        }
+      )
+      const data = await response.json();
+      setAnnual(data);
+      return data;
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  return { postAnnualLeave, getAnnualLeave, annual }
 }
 
 export default useAnnualLeave
