@@ -13,6 +13,7 @@ const controlLikes = require("./controlLikes");
 const createReply = require("./createReply");
 const createAnnualLeave = require("./createAnnualLeave");
 const moment = require('moment');
+const getAnnualLeave = require("./getAnnualLeave");
 
 
 admin.initializeApp({
@@ -31,6 +32,7 @@ exports.readNotice = regionalFunctions.https.onRequest(readNotice);
 exports.controlLikes = regionalFunctions.https.onRequest(controlLikes);
 exports.createReply = regionalFunctions.https.onRequest(createReply);
 exports.createAnnualLeave = regionalFunctions.https.onRequest(createAnnualLeave);
+exports.getAnnualLeave = regionalFunctions.https.onRequest(getAnnualLeave);
 
 
 
@@ -41,7 +43,7 @@ exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async
   const querySnapshot = await annualRef.get();
   querySnapshot.forEach(async (doc) => {
       const data = doc.data();
-      const joinDate = moment(data.joinDate);
+      const joinDate = data.joinDate;
       const diff = now.diff(joinDate, 'years');
       const diffMonths = now.diff(joinDate, 'months');
       const diffDays = now.diff(joinDate,'days');
@@ -52,31 +54,20 @@ exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async
       }
       if (diff > 2) {
           data.monthlyLeave = 0;
-          if (diff % 2 !== 0) {
+          if (diff % 2 != 0) {
               data.annualLeave++;
               if (data.annualLeave > 25) {
                   data.annualLeave = 25;
               }
           }
       }
-      if (diffDays % 365 === 0) {
+      if (diffDays % 365 == 0) {
           data.usedLeave = 0;
           data.remainingLeave = data.monthlyLeave + data.annualLeave;
       }
       await annualRef.doc(doc.id).set(data,{ merge: true });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 exports.noticeUserNotification = regionalFunctions.firestore

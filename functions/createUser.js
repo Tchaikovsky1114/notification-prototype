@@ -35,6 +35,6 @@ module.exports = async function(req, res) {
     await userRef.set(req.body);
     await res.json(req.body)  
   } catch (error) {
-    res.status(500).send({ error: err })
+    res.status(500).send({ error: error })
   }
 }
