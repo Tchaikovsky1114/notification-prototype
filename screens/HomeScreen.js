@@ -11,6 +11,7 @@ import { firestore } from '../firebaseConfig'
 import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore'
 import { Entypo } from '@expo/vector-icons';
 import NoticeCard from '../components/NoticeCard'
+import { ScrollView } from 'react-native'
 
 const HomeScreen = () => {
   const { fetchVerifyingToken } = useUserInfo();
@@ -30,10 +31,6 @@ const HomeScreen = () => {
       setIsVerified(true)  
   }, [])
 
-  // useEffect(() => {
-  //   getNotices();
-  // },[]);
-
   useEffect(() => {
     const unsubscription = onSnapshot(collection(firestore,'Notice'), (snapshot) => {
       const ntc = [];
@@ -47,7 +44,8 @@ const HomeScreen = () => {
   return (
     <>
     <RichTextEditor />
-    <View style={styles.container}>
+
+    <ScrollView style={styles.container}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={notices}
@@ -66,14 +64,15 @@ const HomeScreen = () => {
         id={item.id}
       />}
       />
-      <TouchableOpacity
+      
+    </ScrollView>
+    <TouchableOpacity
       activeOpacity={0.5}
       onPress={toggleWritePageHandler}
-      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#120a57',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:60,right:10}}
+      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#120a57',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:10,right:10}}
       >
         <Entypo name="pencil" size={24} color="black" />
       </TouchableOpacity>
-    </View>
     </>
   )
 }

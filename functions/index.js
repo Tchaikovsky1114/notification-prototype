@@ -74,7 +74,7 @@ exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async
 
   });
 });
-
+regionalFunctions.firestore.document().on
 
 exports.noticeUserNotification = regionalFunctions.firestore
 .document('Notice/{noticeId}')
@@ -107,13 +107,13 @@ exports.noticeUserNotification = regionalFunctions.firestore
       return null;
     }
   }
-
 })
+
 exports.welcomeUserNotification = regionalFunctions.firestore
 .document('User/{userId}')
 .onCreate(async (snap, context) => {
   let expo = new Expo();
-  const userId = context.params.userId;
+  
   const user = snap.data();  
   
   let messages = [];
