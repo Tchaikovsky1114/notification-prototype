@@ -71,7 +71,7 @@ const AnnualLeaveScreen = () => {
   const [selectedDate,setSelectedDate] = useState([]); 
   const [markedDates,setMarkedDates] = useState({});
   const [isShowCalander,setIsShowCalander] = useState(false);
-  const [isShowAppointVacationModal,setIsShowAppointVacationModal] = useState(true);
+  const [isShowAppointVacationModal,setIsShowAppointVacationModal] = useState(false);
   const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
   const userInfo = useRecoilValue(userInfoState)
   const navigation = useNavigation();
@@ -144,7 +144,9 @@ const AnnualLeaveScreen = () => {
   useEffect(() => {
     marking()
   }, [selectedDate])
-
+  console.log('=diffDay=',diffDay);
+  console.log('=diffMonth=',diffMonth);
+  console.log('diffYear=',diffYear);
   return (
     <>
     <Modal

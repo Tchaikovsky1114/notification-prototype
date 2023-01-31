@@ -8,7 +8,7 @@ module.exports = async function(req,res) {
     const userAnnual =  await admin.firestore().collection('Annual').doc(`${email}`).get();
     return res.send(userAnnual.data());
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error({error: error.message});
   }
   
 }
