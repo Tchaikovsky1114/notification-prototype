@@ -39,8 +39,8 @@ LocaleConfig.locales['ko'] = {
     '11월',
     '12월'
   ],
-  dayNames: ['일요일', '화요일', '수요일', '목요일', '금요일', '토요일', '월요일'],
-  dayNamesShort: ['일', '화', '수', '목', '금', '토', '월'],
+  dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+  dayNamesShort: ['일','월','화','수','목','금','토'],
   today: "오늘"
 };
 LocaleConfig.defaultLocale = 'ko';
@@ -59,6 +59,7 @@ LocaleConfig.defaultLocale = 'ko';
  * workDay % 365 === 1 일때 totalAnnualLeave, usableAnnualLeave, usedAnnualLeave를
  * 연차에 맞게끔 초기화 후 알맞는 값을 넣어줌.
  */
+
 const now = moment();
 const formattedToday =  moment().format('yyyy-MM-DD')
 
@@ -67,6 +68,8 @@ const AnnualLeaveScreen = () => {
   const [diffDay,setDiffDay] = useState();
   const [diffMonth,setDiffMonth] = useState();
   const [diffYear,setDiffYear] = useState();
+  const [selectedDate,setSelectedDate] = useState([]); 
+  const [markedDates,setMarkedDates] = useState({});
   const [isShowCalander,setIsShowCalander] = useState(false);
   const [isShowAppointVacationModal,setIsShowAppointVacationModal] = useState(true);
   const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
@@ -79,6 +82,17 @@ const AnnualLeaveScreen = () => {
     const joinDate = selectedDate;
     confirmAlertHandler(joinDate)
   }
+
+  const markDateHandler = (day) => {
+    setSelectedDate((prev) => ([...prev,day.dateString]))
+  }
+
+  const marking = () => {
+    const obj = selectedDate.reduce((c,v) => Object.assign(c, {[v]: { selected: true, amrked: true}}),{});
+    setMarkedDates(obj);
+  }
+
+  
   
   const confirmAlertHandler = (joinDate) => {
     Alert.alert(
@@ -107,7 +121,7 @@ const AnnualLeaveScreen = () => {
   }
   
   const showVacationModalHandler = () => {
-    console.log('excuted');
+    
     setIsShowAppointVacationModal(true);
   }
   
@@ -115,6 +129,7 @@ const AnnualLeaveScreen = () => {
     getAnnualLeave(userInfo.email);
   }, [])
   
+
   useEffect(() => {
     const today = moment(new Date());
     const joinDate = moment(date);
@@ -126,6 +141,10 @@ const AnnualLeaveScreen = () => {
     setDiffYear(differenceYear);
   },[date])
 
+  useEffect(() => {
+    marking()
+  }, [selectedDate])
+
   return (
     <>
     <Modal
@@ -133,18 +152,14 @@ const AnnualLeaveScreen = () => {
     onRequestClose={() => setIsShowAppointVacationModal(false)}
     transparent={false}
     style={{flex:1}}
-    
     >
-    
       <Calendar
       // // Initially visible month. Default = now
       initialDate={formattedToday}
-      // minDate={'2012-05-10'}
-      // maxDate={'2012-05-30'}
-      // // Handler which gets executed on day press. Default = undefined
-      onDayPress={day => {
-        console.log('selected day', day);
-      }}
+      
+      markedDates={markedDates}
+      markingType="custom"
+      onDayPress={(day) => markDateHandler(day)}
       theme={{
         monthTextColor:'#2d63e2',
         textMonthFontSize:24,
