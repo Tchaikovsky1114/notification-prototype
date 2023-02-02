@@ -166,7 +166,13 @@ const AnnualLeaveScreen = () => {
     setMarkedDates(myLeave);
     return myLeave;
   }
-
+  
+  const submitAnnualLeave = () => {
+    const obj = {
+      email: userInfo.email,
+    }
+    
+  }
   
   const initializeSelectAnnualLeave = () => {
     removeSelectAnnualLeave();
@@ -233,10 +239,10 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
     >
       
       <View style={{flex:1,justifyContent:'center'}}>
-      <View style={{alignItems:'center'}}>
-      <Text style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</Text>
-      <Text style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</Text>
-      </View>
+        <View style={{alignItems:'center'}}>
+          <Text style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</Text>
+          <Text style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</Text>
+        </View>
       <Calendar
       // // Initially visible month. Default = now
       initialDate={formattedToday}
