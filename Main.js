@@ -91,8 +91,7 @@ const MainScreen = () => {
         tabBarIcon: ({focused}) => {
 
           if(route.name === 'Notice') {
-            console.log(route.name);
-            console.log(focused);
+            
             return focused
             ? <AntDesign name="notification" size={24} color="#2d63e2" />
             : <AntDesign name="notification" size={24} color="#120a57" />

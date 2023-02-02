@@ -39,7 +39,7 @@ const SignIn = () => {
           setIsLoading(true);
            fetchVerifyingEmail(user)
             .then((result) => {
-            console.log('result', result);
+            
             if(result.status === 200) {
               setIsLoading(false)
               setUserInfo(() => ({

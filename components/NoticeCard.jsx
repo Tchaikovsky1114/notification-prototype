@@ -81,10 +81,8 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
       setIsLoading(false);
       setReplyValue('');
     });
-    
-    
   }
-  console.log(reply[0] ? reply[0] : null);
+  
   return (
     <View
       style={{ alignItems: 'center', width: '100%', backgroundColor: '#fff',paddingHorizontal:24}}

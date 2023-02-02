@@ -20,8 +20,8 @@ const useAnnualLeave = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
-      
+      // setAnnual(data.data);
+      setAnnual(data.data);
       return data;
     } catch (error) {
       
@@ -36,7 +36,6 @@ const useAnnualLeave = () => {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            
           },
         }
       )

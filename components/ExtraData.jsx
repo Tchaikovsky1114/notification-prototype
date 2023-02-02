@@ -66,7 +66,7 @@ const ExtraData = () => {
     }));
   }, [userInfo]);
 
-  // console.log({...inputValue,pushToken});
+  
 
 
   useEffect(() => {

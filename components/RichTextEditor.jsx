@@ -29,7 +29,7 @@ const RichTextEditor = () => {
     if(text) {
       setInputvalue(text)
       setIsEmpty(false);
-      // console.log(inputValue);
+      
     }else{
       setIsEmpty(true);
     }
@@ -87,7 +87,7 @@ const RichTextEditor = () => {
           return downloadUrl;
         })
         .then((url) => {
-          console.log('==get download URL==',url);
+          
           setImage(url);
         });
       }
@@ -99,10 +99,6 @@ const RichTextEditor = () => {
     // 2번째 인자는 style.
     richText.current?.insertImage(image);
   }, [image]);
-
-  // console.log(totalImages);
-  // console.log(inputValue);
-  console.log(userInfo.name);
 
   return (
     <Modal visible={isShow} onRequestClose={() => setIsShow(false)}>

@@ -45,21 +45,6 @@ LocaleConfig.locales['ko'] = {
 };
 LocaleConfig.defaultLocale = 'ko';
 
-/**
- * 필요한 필드값
- * joinDate - 나의 입사일
- * MyAnnual - 현재 나의 연차
- * totalAnnualLeave - 총 연차휴가
- * usableAnnualLeave - 사용 가능한 연차휴가
- * usedAnnualLeave - 사용한 연차 휴가
- * workDay - (현재일 - 입사일) 날일로 환산
- * workMonth - (현재일 - 입사일)을 월로 환산 (잔여일 버림)
- * workyear - (현재일 - 입사일)을 년으로 환산 (잔여일 버림)
- * 접속할 때마다 계산해서 서버로 upload
- * workDay % 365 === 1 일때 totalAnnualLeave, usableAnnualLeave, usedAnnualLeave를
- * 연차에 맞게끔 초기화 후 알맞는 값을 넣어줌.
- */
-
 const now = moment();
 const formattedToday =  moment().format('yyyy-MM-DD')
 
@@ -72,6 +57,7 @@ const AnnualLeaveScreen = () => {
   const [markedDates,setMarkedDates] = useState({});
   const [isShowCalander,setIsShowCalander] = useState(false);
   const [isShowAppointVacationModal,setIsShowAppointVacationModal] = useState(false);
+  const [confirmAnnualLeave,setConfirmAnnualLeave] = useState(false);
   const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
   const userInfo = useRecoilValue(userInfoState)
   const navigation = useNavigation();
@@ -80,6 +66,7 @@ const AnnualLeaveScreen = () => {
   const onChange = (event,selectedDate) => {
     setIsShowCalander(false)
     const joinDate = selectedDate;
+    setDate(joinDate);
     confirmAlertHandler(joinDate)
   }
 
@@ -91,29 +78,18 @@ const AnnualLeaveScreen = () => {
     const obj = selectedDate.reduce((c,v) => Object.assign(c, {[v]: { selected: true, amrked: true}}),{});
     setMarkedDates(obj);
   }
-
-  
   
   const confirmAlertHandler = (joinDate) => {
     Alert.alert(
       '선택한 이후 날짜를 수정할 수 없습니다',
       '이 날짜로 확정하시겠습니까?',
       [
-        {text: '예', onPress: async () => {
-          setDate(joinDate);
-          const annualLeaveInfo = {
-            userEmail:userInfo.email,
-            joinDate,
-            monthlyLeave: diffDay < 365 ? diffMonth : 0 ,
-            annualLeave: diffDay > 365 ? 15 : 0,
-            usedLeave: 0,
-            remainingLeave: diffDay < 365 ? diffMonth : 15
-          }
-          await postAnnualLeave(annualLeaveInfo)
-          // navigation.navigate('AnnualLeaveDetail')
+        {text: '예', onPress:  () => {
+          
+          setConfirmAnnualLeave(true);
         }},
         {text: '아니요', onPress: () => {
-          console.log('다음에 다시할게요 ')
+          console.log('다음에 다시할게요 ');
         }, style: 'cancel'}
       ],
       { cancelable: false }
@@ -121,13 +97,12 @@ const AnnualLeaveScreen = () => {
   }
   
   const showVacationModalHandler = () => {
-    
     setIsShowAppointVacationModal(true);
   }
   
   useLayoutEffect(() => {
     getAnnualLeave(userInfo.email);
-  }, [])
+  },[]);
   
 
   useEffect(() => {
@@ -144,9 +119,23 @@ const AnnualLeaveScreen = () => {
   useEffect(() => {
     marking()
   }, [selectedDate])
-  console.log('=diffDay=',diffDay);
-  console.log('=diffMonth=',diffMonth);
-  console.log('diffYear=',diffYear);
+  
+  useEffect(() => {
+    if(!confirmAnnualLeave) return;
+
+    const annualLeaveInfo = {
+      userEmail:userInfo.email,
+      joinDate: date,
+      monthlyLeave: diffDay < 365 ? diffMonth : 0 ,
+      annualLeave: diffDay > 365 ? 15 : 0,
+      usedLeave: 0,
+      remainingLeave: diffDay < 365 ? diffMonth : 15
+    }
+    postAnnualLeave(annualLeaveInfo);
+  },[confirmAnnualLeave])
+  console.log(diffDay);
+  console.log(diffMonth);
+  console.log(annual);
   return (
     <>
     <Modal
@@ -180,13 +169,7 @@ const AnnualLeaveScreen = () => {
           }
         }
       }}
-      // // Handler which gets executed on day long press. Default = undefined
-      // onDayLongPress={day => {
-      //   console.log('selected day', day);
-      // }}
-      // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
       monthFormat={'yyyy년 MM월'}
-      
       // // Handler which gets executed when visible month changes in calendar. Default = undefined
       // onMonthChange={month => {
       //   console.log('month changed', month);
@@ -207,21 +190,11 @@ const AnnualLeaveScreen = () => {
       // // Show week numbers to the left. Default = false
       // showWeekNumbers={true}
       // // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-      // onPressArrowLeft={subtractMonth => subtractMonth()}
-      // // Handler which gets executed when press arrow icon right. It receive a callback can go next month
-      // onPressArrowRight={addMonth => addMonth()}
-      // // Disable left arrow. Default = false
-      // disableArrowLeft={true}
-      // // Disable right arrow. Default = false
-      // disableArrowRight={true}
-      // // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-      // disableAllTouchEventsForDisabledDays={true}
-      // // Replace default month and year title with custom one. the function receive a date as parameter
-      // renderHeader={date => {
-      //   /*Return JSX*/<View>
-      //     {date}
-      //   </View>
-      // }}
+      renderHeader={date => {
+        /*Return JSX*/<View>
+          <Text>Hello world! {date}</Text>
+        </View>
+      }}
       // // Enable the option to swipe between months. Default = false
       // enableSwipeMonths={true}
     />
@@ -276,7 +249,6 @@ const AnnualLeaveScreen = () => {
         <View style={{height:20}} />
         <Text style={{color:'#fff'}}>선택 이후에는 수정할 수 없습니다.</Text>
       </TouchableOpacity>
-     
     </View>}
     </>
   )

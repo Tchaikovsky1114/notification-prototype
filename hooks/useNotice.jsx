@@ -34,7 +34,7 @@ const useNotice = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      
       return data;
     } catch (error) {
       console.error(error);
@@ -91,10 +91,10 @@ const useNotice = () => {
         }
       })
       const data = await response.json();
-      console.log('===== Likes Result =====',data);
+      
       return data; 
     } catch (error) {
-      console.log('===== error =====', error);
+      console.error(error);
     }
   }
   const createReply = async ({id,name,email,reply,department,position}) => {
@@ -116,7 +116,7 @@ const useNotice = () => {
         })
       })
       const data = response.json();
-      console.log(data);
+      
       return data  
     } catch (error) {
       console.error(error);

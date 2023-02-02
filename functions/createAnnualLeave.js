@@ -10,5 +10,6 @@ module.exports = async function(req, res) {
     id:annualRef.id,
   })
 
-  return await res.send({ message: '연차가 성공적으로 등록되었습니다' })
+  const annual = await annualRef.get()
+  return await res.json({ message: '연차가 성공적으로 등록되었습니다', data: annual.data() })
 }
