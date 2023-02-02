@@ -8,7 +8,9 @@ import useAnnualLeave from '../hooks/useAnnualLeave';
 import { useRecoilValue } from 'recoil';
 import { useNavigation } from '@react-navigation/native';
 import { userInfoState } from '../recoil/userInfo';
-import { LocaleConfig,Calendar,CalendarList,Agenda } from 'react-native-calendars';
+import { LocaleConfig,Calendar } from 'react-native-calendars';
+
+
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -47,6 +49,11 @@ LocaleConfig.defaultLocale = 'ko';
 
 const now = moment();
 const formattedToday =  moment().format('yyyy-MM-DD')
+const initDate = new Date();
+const minimumDate = new Date();
+const disabledDaysIndexes = [6, 7];
+
+const currentYear = now.year();
 
 const AnnualLeaveScreen = () => {
   const [date, setDate] = useState(new Date());
@@ -58,6 +65,8 @@ const AnnualLeaveScreen = () => {
   const [isShowCalander,setIsShowCalander] = useState(false);
   const [isShowAppointVacationModal,setIsShowAppointVacationModal] = useState(false);
   const [confirmAnnualLeave,setConfirmAnnualLeave] = useState(false);
+  const [disabledDates,setDisabledDates] = useState([]);
+  const [monthChange,setMonthChange] = useState();
   const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
   const userInfo = useRecoilValue(userInfoState)
   const navigation = useNavigation();
@@ -71,12 +80,20 @@ const AnnualLeaveScreen = () => {
   }
 
   const markDateHandler = (day) => {
-    setSelectedDate((prev) => ([...prev,day.dateString]))
+    // if(day.getDay() !== 6 || day.getDay() !== 7){
+      setSelectedDate((prev) => ([...prev,day.dateString]))
+    // }
+    console.log(day)
   }
 
   const marking = () => {
-    const obj = selectedDate.reduce((c,v) => Object.assign(c, {[v]: { selected: true, amrked: true}}),{});
-    setMarkedDates(obj);
+    const obj = selectedDate.reduce((c,v) => Object.assign(c, {[v]: { selected: true }}),{});
+    
+    const obj2 = {
+      ...obj,
+      ...disabledDates,
+    }
+    setMarkedDates(obj2);
   }
   
   const confirmAlertHandler = (joinDate) => {
@@ -99,6 +116,45 @@ const AnnualLeaveScreen = () => {
   const showVacationModalHandler = () => {
     setIsShowAppointVacationModal(true);
   }
+  
+  const getDisabledDays = (month, year, daysIndexes,type) => {
+    let pivot = moment().month(month).year(year).startOf('month');
+    const end = moment().month(month).year(year).endOf('month');
+    
+    let dates = {};
+    const disabled = { disabled: true, disableTouchEvent: true };
+    const holidays = {
+      [`${currentYear}-01-01`]: disabled,
+      [`${currentYear}-03-01`]: disabled,
+      [`${currentYear}-05-01`]: disabled,
+      [`${currentYear}-05-05`]: disabled,
+      [`${currentYear}-06-06`]: disabled,
+      [`${currentYear}-08-15`]: disabled,
+      [`${currentYear}-10-03`]: disabled,
+      [`${currentYear}-10-09`]: disabled,
+      [`${currentYear}-12-25`]: disabled,
+      
+    };
+    while (pivot.isBefore(end)) {
+      daysIndexes.forEach((day) => {
+        const copy = moment(pivot);
+        dates[copy.day(day).format('YYYY-MM-DD')] = disabled;
+      });
+      pivot.add(7, 'days');
+    }
+    dates = {
+      ...dates,
+      ...holidays
+    }
+    if(type === 'init'){
+      setMarkedDates(dates)  
+    }
+    if(!type){
+      
+      setDisabledDates((prev) => ({...prev,...dates}));
+    }
+    return dates;
+  };
   
   useLayoutEffect(() => {
     getAnnualLeave(userInfo.email);
@@ -133,9 +189,31 @@ const AnnualLeaveScreen = () => {
     }
     postAnnualLeave(annualLeaveInfo);
   },[confirmAnnualLeave])
-  console.log(diffDay);
-  console.log(diffMonth);
-  console.log(annual);
+
+
+  useEffect(() => {
+    console.log('month changed');
+    getDisabledDays(
+      initDate.getMonth(),
+      initDate.getFullYear(),
+      disabledDaysIndexes,
+      'init'
+    );
+  }, []);
+  
+  const extractMyAnnualLeave = () => {
+    const myLeave = [];
+    for(let key in markedDates) {
+      if(!markedDates[key].selected) {
+        myLeave.push(key);
+      }
+    }
+
+    console.log(myLeave);
+  }
+  extractMyAnnualLeave();
+
+
   return (
     <>
     <Modal
@@ -144,18 +222,29 @@ const AnnualLeaveScreen = () => {
     transparent={false}
     style={{flex:1}}
     >
+      
+      <View style={{flex:1,justifyContent:'center'}}>
+      <View style={{alignItems:'center'}}>
+      <Text style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</Text>
+      <Text style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</Text>
+      </View>
       <Calendar
       // // Initially visible month. Default = now
       initialDate={formattedToday}
-      
+      disabledDaysIndexes={disabledDaysIndexes}
+      onMonthChange={(date) => {
+        setMonthChange(date.month);
+        getDisabledDays(date.month - 1, date.year, disabledDaysIndexes);
+      }}
       markedDates={markedDates}
       markingType="custom"
       onDayPress={(day) => markDateHandler(day)}
       theme={{
-        monthTextColor:'#2d63e2',
+        monthTextColor:'#08035f',
         textMonthFontSize:24,
         arrowWidth:18,
-        selectedDayTextColor:'#f41',
+        selectedDayBackgroundColor:'#2d63e2',
+        selectedDayTextColor:'#fff',
         selectedDotColor:'#f41',
         'stylesheet.calendar.header': {
           dayTextAtIndex0: {
@@ -170,6 +259,7 @@ const AnnualLeaveScreen = () => {
         }
       }}
       monthFormat={'yyyy년 MM월'}
+      
       // // Handler which gets executed when visible month changes in calendar. Default = undefined
       // onMonthChange={month => {
       //   console.log('month changed', month);
@@ -190,15 +280,11 @@ const AnnualLeaveScreen = () => {
       // // Show week numbers to the left. Default = false
       // showWeekNumbers={true}
       // // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-      renderHeader={date => {
-        /*Return JSX*/<View>
-          <Text>Hello world! {date}</Text>
-        </View>
-      }}
+      
       // // Enable the option to swipe between months. Default = false
       // enableSwipeMonths={true}
     />
-    
+    </View>
     </Modal>
     {isShowCalander &&
     <DateTimePicker
