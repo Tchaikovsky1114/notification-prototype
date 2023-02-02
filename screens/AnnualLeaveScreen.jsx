@@ -167,6 +167,13 @@ const AnnualLeaveScreen = () => {
     return myLeave;
   }
 
+  
+  const initializeSelectAnnualLeave = () => {
+    removeSelectAnnualLeave();
+    setExtractAnnualLeave([]);
+    setSelectedDate([]);
+  }  
+
   useLayoutEffect(() => {
     getAnnualLeave(userInfo.email);
   },[]);
@@ -211,12 +218,7 @@ const AnnualLeaveScreen = () => {
       'init'
     );
   }, []);
-  
-  const initializeSelectAnnualLeave = () => {
-    removeSelectAnnualLeave();
-    setExtractAnnualLeave([]);
-    setSelectedDate([]);
-  }  
+
   
 
 console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
