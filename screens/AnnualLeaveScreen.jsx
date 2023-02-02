@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { useNavigation } from '@react-navigation/native';
 import { userInfoState } from '../recoil/userInfo';
 import { LocaleConfig,Calendar } from 'react-native-calendars';
+import { Pressable } from 'react-native';
 
 
 
@@ -56,6 +57,7 @@ const disabledDaysIndexes = [6, 7];
 const currentYear = now.year();
 
 const AnnualLeaveScreen = () => {
+  const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
   const [date, setDate] = useState(new Date());
   const [diffDay,setDiffDay] = useState();
   const [diffMonth,setDiffMonth] = useState();
@@ -67,7 +69,7 @@ const AnnualLeaveScreen = () => {
   const [confirmAnnualLeave,setConfirmAnnualLeave] = useState(false);
   const [disabledDates,setDisabledDates] = useState([]);
   const [monthChange,setMonthChange] = useState();
-  const { postAnnualLeave,getAnnualLeave,annual } = useAnnualLeave();
+  const [extractAnnualLeave,setExtractAnnualLeave] = useState([]);
   const userInfo = useRecoilValue(userInfoState)
   const navigation = useNavigation();
 
@@ -80,10 +82,7 @@ const AnnualLeaveScreen = () => {
   }
 
   const markDateHandler = (day) => {
-    // if(day.getDay() !== 6 || day.getDay() !== 7){
-      setSelectedDate((prev) => ([...prev,day.dateString]))
-    // }
-    console.log(day)
+    setSelectedDate((prev) => ([...prev,day.dateString]))
   }
 
   const marking = () => {
@@ -155,7 +154,19 @@ const AnnualLeaveScreen = () => {
     }
     return dates;
   };
-  
+
+  const removeSelectAnnualLeave = () => {
+    const myLeave = {};
+    const disabled = { disabled: true, disableTouchEvent: true };
+    for(let key in markedDates) {
+      if(!markedDates[key].selected) {
+        myLeave[key] = disabled;
+      }
+    }
+    setMarkedDates(myLeave);
+    return myLeave;
+  }
+
   useLayoutEffect(() => {
     getAnnualLeave(userInfo.email);
   },[]);
@@ -201,18 +212,14 @@ const AnnualLeaveScreen = () => {
     );
   }, []);
   
-  const extractMyAnnualLeave = () => {
-    const myLeave = [];
-    for(let key in markedDates) {
-      if(!markedDates[key].selected) {
-        myLeave.push(key);
-      }
-    }
+  const initializeSelectAnnualLeave = () => {
+    removeSelectAnnualLeave();
+    setExtractAnnualLeave([]);
+    setSelectedDate([]);
+  }  
+  
 
-    console.log(myLeave);
-  }
-  extractMyAnnualLeave();
-
+console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
 
   return (
     <>
@@ -238,7 +245,11 @@ const AnnualLeaveScreen = () => {
       }}
       markedDates={markedDates}
       markingType="custom"
-      onDayPress={(day) => markDateHandler(day)}
+      onDayPress={(day) => {
+        if(annual.remainingLeave - extractAnnualLeave.length <= 0) return;
+        markDateHandler(day);
+        setExtractAnnualLeave((prev) => [...prev,day.dateString]);
+      }}
       theme={{
         monthTextColor:'#08035f',
         textMonthFontSize:24,
@@ -279,11 +290,37 @@ const AnnualLeaveScreen = () => {
       // hideDayNames={true}
       // // Show week numbers to the left. Default = false
       // showWeekNumbers={true}
-      // // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-      
-      // // Enable the option to swipe between months. Default = false
-      // enableSwipeMonths={true}
+      enableSwipeMonths={true}
     />
+    {annual &&
+    <>
+    <View style={{marginTop:24,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
+      <Text style={{fontSize:24}}>남은 휴가일: </Text>
+    <View style={{width:8}} />
+      <Text style={{fontSize:20}}>{annual.remainingLeave - extractAnnualLeave.length}일</Text>
+    </View>
+    {extractAnnualLeave.length > 0 &&
+    <View style={{marginTop:8,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
+      <Text style={{fontSize:24}}>선택한 날짜 수: </Text>
+    <View style={{width:8}} />
+      <Text style={{fontSize:16}}>{extractAnnualLeave.length}일</Text>
+    </View>}
+    </>  
+    }
+    <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:24}}>
+    <Pressable
+      onPress={initializeSelectAnnualLeave}
+      style={{height:53,paddingHorizontal:24,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#f41'}}
+    >
+      <Text style={{color:'#f41'}}>다시 선택하기</Text>
+    </Pressable>
+    <Pressable
+      onPress={() => {}}
+      style={{height:53,paddingHorizontal:24,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#2d63e2'}}
+    >
+      <Text style={{color:'#2d63e2'}}>연차 상신하기</Text>
+    </Pressable>
+    </View>
     </View>
     </Modal>
     {isShowCalander &&
@@ -296,7 +333,6 @@ const AnnualLeaveScreen = () => {
       locale="ko"
       on
       />}
-    
     {annual
     ? 
     <View style={{flex:1, backgroundColor:'#fff',paddingHorizontal:8}}>
@@ -349,5 +385,4 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center'
   }
-
 })
