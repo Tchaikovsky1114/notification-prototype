@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { userInfoState } from '../recoil/userInfo';
 import { LocaleConfig,Calendar } from 'react-native-calendars';
 import { Pressable } from 'react-native';
+import NotoText from '../components/common/NotoText';
 
 
 
@@ -240,8 +241,8 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
       
       <View style={{flex:1,justifyContent:'center'}}>
         <View style={{alignItems:'center'}}>
-          <Text style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</Text>
-          <Text style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</Text>
+          <NotoText style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</NotoText>
+          <NotoText style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</NotoText>
         </View>
       <Calendar
       // // Initially visible month. Default = now
@@ -262,6 +263,18 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
         monthTextColor:'#08035f',
         textMonthFontSize:24,
         arrowWidth:18,
+        textDayFontFamily: 'Noto400',
+        textMonthFontFamily: 'Noto400',
+        todayButtonFontFamily: 'Noto400',
+        textDayHeaderFontFamily: 'Noto400',
+        
+        textDayStyle: {
+          fontSize:24,
+          alignItems:'center',
+          justifyContent:'center',
+          lineHeight:28,
+        },
+        weekVerticalMargin: 16,
         selectedDayBackgroundColor:'#2d63e2',
         selectedDayTextColor:'#fff',
         selectedDotColor:'#f41',
@@ -302,31 +315,31 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
     />
     {annual &&
     <>
-    <View style={{marginTop:24,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
-      <Text style={{fontSize:24}}>남은 휴가일: </Text>
+    <View style={{paddingLeft:16,marginTop:24,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
+      <NotoText style={{fontSize:16}}>남은 휴가일: </NotoText>
     <View style={{width:8}} />
-      <Text style={{fontSize:20}}>{annual.remainingLeave - extractAnnualLeave.length}일</Text>
+      <NotoText style={{fontSize:16}}>{annual.remainingLeave - extractAnnualLeave.length}일</NotoText>
     </View>
     {extractAnnualLeave.length > 0 &&
-    <View style={{marginTop:8,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
-      <Text style={{fontSize:24}}>선택한 날짜 수: </Text>
+    <View style={{paddingLeft:16,marginTop:8,flexDirection:'row',justifyContent:'flex-start',alignItems:'center'}}>
+      <NotoText style={{fontSize:16}}>선택한 날짜 수: </NotoText>
     <View style={{width:8}} />
-      <Text style={{fontSize:16}}>{extractAnnualLeave.length}일</Text>
+      <NotoText style={{fontSize:16}}>{extractAnnualLeave.length}일</NotoText>
     </View>}
     </>  
     }
     <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:24}}>
     <Pressable
       onPress={initializeSelectAnnualLeave}
-      style={{height:53,paddingHorizontal:24,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#f41'}}
+      style={{paddingHorizontal:24,paddingVertical:16,borderRadius:4,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#f41'}}
     >
-      <Text style={{color:'#f41'}}>다시 선택하기</Text>
+      <NotoText style={{color:'#f41',fontSize:18}}>다시 선택하기</NotoText>
     </Pressable>
     <Pressable
       onPress={() => {}}
-      style={{height:53,paddingHorizontal:24,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#2d63e2'}}
+      style={{paddingHorizontal:24,paddingVertical:16,borderRadius:4,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#2d63e2'}}
     >
-      <Text style={{color:'#2d63e2'}}>연차 상신하기</Text>
+      <NotoText style={{color:'#2d63e2',fontSize:18}}>연차 상신하기</NotoText>
     </Pressable>
     </View>
     </View>
@@ -345,22 +358,22 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
     ? 
     <View style={{flex:1, backgroundColor:'#fff',paddingHorizontal:8}}>
       <View style={{borderWidth:1, borderColor:'#2d63e2',padding:16}}>
-        <Text style={{fontSize:18}}>{userInfo.name}님의 연차와 관련된 정보입니다.</Text>
-        <Text style={{fontSize:20}}>입사일자: <Text style={{color:'#2d63e2'}}>{annual.joinDate.split('T')[0].split('-')[0]}년 {annual.joinDate.split('T')[0].split('-')[1]}월 {annual.joinDate.split('T')[0].split('-')[2]}일</Text></Text>
+        <NotoText style={{fontSize:18}}>{userInfo.name}님의 연차와 관련된 정보입니다.</NotoText>
+        <NotoText style={{fontSize:20}}>입사일자: <NotoText style={{color:'#2d63e2'}}>{annual.joinDate.split('T')[0].split('-')[0]}년 {annual.joinDate.split('T')[0].split('-')[1]}월 {annual.joinDate.split('T')[0].split('-')[2]}일</NotoText></NotoText>
       </View>
     <View style={{marginVertical:24,paddingBottom:8,borderBottomWidth:1, borderBottomColor:'#f41',justifyContent:'flex-start',alignItems:'flex-start'}}>
-      { now.diff(annual.joinDate,'years') > 1 && <Text style={{fontSize:24}}>이번년도 지급 연차 <Text style={{color:'#f91'}}>{annual.annualLeave}</Text> 개</Text>}
-      { now.diff(annual.joinDate,'years') < 2 && <Text style={{fontSize:24}}>이번년도 지급 월차 <Text style={{color:'#f91'}}>{annual.monthlyLeave}</Text> 개</Text> }
+      { now.diff(annual.joinDate,'years') > 1 && <NotoText style={{fontSize:24}}>이번년도 지급 연차 <NotoText style={{color:'#f91'}}>{annual.annualLeave}</NotoText> 개</NotoText>}
+      { now.diff(annual.joinDate,'years') < 2 && <NotoText style={{fontSize:24}}>이번년도 지급 월차 <NotoText style={{color:'#f91'}}>{annual.monthlyLeave}</NotoText> 개</NotoText> }
     </View>
     <View>
-      <Text style={{fontSize:24}}>이번년도 사용 휴가: <Text style={{color:'#2d63e2'}}>{annual.usedLeave}</Text></Text>
-      <Text style={{fontSize:24}}>이번년도 남은 휴가: <Text style={{color:'#f41'}}>{annual.remainingLeave}</Text></Text>
+      <NotoText style={{fontSize:24}}>이번년도 사용 휴가: <NotoText style={{color:'#2d63e2'}}>{annual.usedLeave}</NotoText></NotoText>
+      <NotoText style={{fontSize:24}}>이번년도 남은 휴가: <NotoText style={{color:'#f41'}}>{annual.remainingLeave}</NotoText></NotoText>
     </View>
       <View style={{marginTop:72,justifyContent:'center',alignItems:'center'}}>
         <TouchableOpacity
         onPress={showVacationModalHandler}
         style={{height:144,backgroundColor:'#2d63e2',width:'80%',justifyContent:'center',alignItems:'center',borderRadius:8}}>
-          <Text style={{color:'#fff',fontWeight:'bold',fontSize:28}}>휴가 사용</Text>
+          <NotoText style={{color:'#fff',fontSize:28,lineHeight:32}}>휴가 사용</NotoText>
         </TouchableOpacity>
       </View>
     </View>
@@ -375,9 +388,9 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
         borderRadius:16,
         backgroundColor:'#2d63e2'
         }}>
-        <Text style={{fontSize:32,color:'#fff'}}>입사년월을 선택해주세요.</Text>
+        <NotoText style={{fontSize:32,color:'#fff'}}>입사년월을 선택해주세요.</NotoText>
         <View style={{height:20}} />
-        <Text style={{color:'#fff'}}>선택 이후에는 수정할 수 없습니다.</Text>
+        <NotoText style={{color:'#fff'}}>선택 이후에는 수정할 수 없습니다.</NotoText>
       </TouchableOpacity>
     </View>}
     </>

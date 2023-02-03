@@ -11,7 +11,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import React, { useState } from 'react';
-import RenderHTML from 'react-native-render-html';
+import RenderHTML, {defaultSystemFonts} from 'react-native-render-html';
 import useSeparateTime from '../hooks/useSeparateTime';
 import useNotice from '../hooks/useNotice';
 import { AntDesign } from '@expo/vector-icons';
@@ -19,7 +19,9 @@ import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
 
 import ReplyCard from './ReplyCard';
-
+import NotoText from './common/NotoText';
+import * as Constants from 'expo-constants';
+const systemFonts = [...Constants.default.systemFonts, 'Noto400','Noto500','Noto700']
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -31,7 +33,8 @@ const tagStyles = {
     padding: 32,
     marginTop: 16,
     marginBottom:16,
-    fontSize: 20,
+    fontSize: 14,
+    fontFamily:'Noto400'
   },
   img: {
     width: deviceWidth > 330 ? 250 : 330,
@@ -101,12 +104,12 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
         }}
       >
         <View style={{paddingVertical:2,borderBottomWidth:1, borderBottomColor:'#ccc'}}>
-          <Text style={{ fontSize: 18 }}>{title}</Text>
+          <NotoText style={{ fontSize: 18 }}>{title}</NotoText>
         </View>
         <View style={{marginVertical:4,justifyContent:'flex-end',alignItems:'flex-end',width:'100%'}}>
-          <Text style={{ fontSize: 14 }}>작성일자: {createdTime.year}년 {createdTime.month}월 {createdTime.day}일 {createdTime.hours}시 {createdTime.minutes}분 {createdTime.seconds}초</Text>
-          <Text style={{ fontSize: 14 }}>작성자: {writer}{' '}{position}</Text>
-          <Text style={{ fontSize: 14 }}>조회수 {read}</Text>
+          <NotoText style={{ fontSize: 14 }}>작성일자: {createdTime.year}년 {createdTime.month}월 {createdTime.day}일 {createdTime.hours}시 {createdTime.minutes}분 {createdTime.seconds}초</NotoText>
+          <NotoText style={{ fontSize: 14 }}>작성자: {writer}{' '}{position}</NotoText>
+          <NotoText style={{ fontSize: 14 }}>조회수 {read}</NotoText>
         </View>
       </TouchableOpacity>
       {/* title을 클릭하면 해당 글 내용이 아래로 펼쳐지게끔 만들기 */}
@@ -116,8 +119,9 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
           source={{ html: content }}
           contentWidth={width}
           tagsStyles={tagStyles}
+          systemFonts={systemFonts}
         />
-        <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'flex-end',width:'100%',marginBottom:8}}>
+        <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center',width:'100%',marginBottom:8}}>
         <Pressable
         onPress={toggleLikeHandler}
         style={{marginRight:8}}
@@ -127,10 +131,10 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
         : <AntDesign name="hearto" size={20} color="red" />
         }
         </Pressable>
-        <Text>{like.length}</Text>
+        <NotoText>{like.length}</NotoText>
         </View>
-        <View style={{marginVertical:16,width:'100%',alignItems:'flex-start'}}>
-          <Text>댓글({reply.length})</Text>
+        <View style={{ marginVertical:16, width:'100%', alignItems:'flex-start' }}>
+          <NotoText>댓글({reply.length})</NotoText>
         </View>
         <FlatList
             keyExtractor={(item) => item.id}
@@ -145,14 +149,13 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
               name={item.name}
               position={item.position}
               reply={item.reply}
-              />}
-            
+              />
+            }
             ItemSeparatorComponent={<View style={{height:16}} />}
             scrollEnabled={true}
             showsVerticalScrollIndicator={true}
             // ListFooterComponent={<View style={{height:20}} />}
             />
-
         <View style={{borderWidth:1, borderColor:'#dde',padding:8,borderRadius:4,marginTop:16,backgroundColor:'#f6f9ff'}}>
         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
         <TextInput
@@ -163,13 +166,13 @@ const NoticeCard = ({title,id,content,department,email,position,like,reply,read,
           style={{
             backgroundColor:'#fff',
             padding:16,borderWidth:1,borderRadius:4, borderColor:'#2d63e2',width:'80%'}} placeholder=" 댓글을 적어주세요" />
-        <View style={{justifyContent:'center',height:96}}>
+        <View style={{justifyContent:'center',padding: 8}}>
           <TouchableOpacity
           activeOpacity={0.5}
           onPress={submitReplyHandler}
           disabled={isLoading}
-          style={{borderWidth:1, borderColor:'#2d63e2',borderRadius:4,padding:8,backgroundColor:'#fff'}}>
-          {isLoading ?  <ActivityIndicator /> : <Text>작성하기</Text>}
+          style={{borderWidth:1, borderColor:'#2d63e2',borderRadius:4,paddingHorizontal:8,backgroundColor:'#fff',justifyContent:'center',alignItems:'center'}}>
+          {isLoading ?  <ActivityIndicator /> : <NotoText style={{fontSize:10}}>작성하기</NotoText>}
           </TouchableOpacity>
           {/* <Pressable
           onPress={() => {}}

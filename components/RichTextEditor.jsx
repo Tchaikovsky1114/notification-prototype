@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
 import { storage } from '../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import NotoText from './common/NotoText';
 
 
 
@@ -147,7 +148,7 @@ const RichTextEditor = () => {
     onPress={submitNoticeHandler}
     style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
     >
-      <Text style={{fontSize:24,textAlign:'center',color:'#fff'}}>게시하기</Text>
+      <NotoText style={{fontSize:24,textAlign:'center',color:'#fff'}}>게시하기</NotoText>
     </Pressable>
     </Modal>
   )

@@ -8,6 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import Toast from 'react-native-root-toast';
+import NotoText from './common/NotoText';
 
 
 
@@ -74,10 +75,10 @@ const ReplyCard = ({createdAt,department,email,id,name,position,reply}) => {
       <TouchableWithoutFeedback>
       <View style={{backgroundColor:'#fff',padding:24,borderRadius:4,justifyContent:'center',alignItems:'center'}}>
         <View style={{ paddingBottom:2,borderBottomWidth:1,marginBottom:16}}>
-        <Text style={{fontSize:24}}>{name} {position}</Text>
+        <NotoText style={{fontSize:24}}>{name} {position}</NotoText>
         </View>
         
-        <Text style={{fontSize:18}}>{email}</Text>
+        <NotoText style={{fontSize:18}}>{email}</NotoText>
         <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:16}}>
         <TouchableOpacity style={{marginRight:48}}
           onPress={addContactHandler}
@@ -107,9 +108,9 @@ const ReplyCard = ({createdAt,department,email,id,name,position,reply}) => {
     <View style={{borderWidth: 1, borderColor: '#dde', borderRadius: 4}}>
       <View style={{flexDirection: 'row'}}>
         <View style={{ backgroundColor: '#f6f9ff',width:'70%',padding:16, position:'relative'}}>
-          <Text>{reply}</Text>
+          <NotoText>{reply}</NotoText>
           <View style={{position:'absolute', bottom:4,right:4}}>
-          <Text style={{fontSize:10,color:'#ccc'}}>{createdTime.year}-{createdTime.month}-{createdTime.day} {createdTime.hours}:{createdTime.minutes}</Text>
+          <NotoText style={{fontSize:10,color:'#ccc'}}>{createdTime.year}-{createdTime.month}-{createdTime.day} {createdTime.hours}:{createdTime.minutes}</NotoText>
           </View>
         </View>
 
@@ -124,12 +125,12 @@ const ReplyCard = ({createdAt,department,email,id,name,position,reply}) => {
             alignItems:'center'
           }}
         >
-          <Text>
+          <NotoText>
             {name} {position}
-          </Text>
-          <Text style={{alignSelf:'flex-end', textAlign: 'right', color: '#2d63e2' }}>
+          </NotoText>
+          <NotoText style={{alignSelf:'flex-end', textAlign: 'right', color: '#2d63e2' }}>
             {department}부서
-          </Text>
+          </NotoText>
         </TouchableOpacity>
       </View>
 
