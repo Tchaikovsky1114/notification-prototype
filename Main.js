@@ -18,6 +18,7 @@ import AnnualLeaveScreen from './screens/AnnualLeaveScreen';
 import ReportScreen from './screens/ReportScreen';
 import AttendanceScreen from './screens/AttendanceScreen';
 import AnnualDetailScreen from './screens/AnnualDetailScreen';
+import NoticeDetail from './screens/NoticeDetail';
 
 
 Notifications.setNotificationHandler({
@@ -212,6 +213,11 @@ const Main = () => {
           //   headerShadowVisible:false,
             
           // }}
+        />
+        <Stack.Screen
+          name="NoticeDetail"
+          component={NoticeDetail}
+          options={{}}
         />
         <Stack.Screen
           name="AnnualLeaveDetail"

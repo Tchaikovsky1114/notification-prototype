@@ -1,24 +1,24 @@
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { userInfoState } from '../recoil/userInfo'
+import { useRecoilState } from 'recoil'
+
 
 import useUserInfo from '../hooks/useUserInfo'
 import RichTextEditor from '../components/RichTextEditor'
 
 import { writeNoticeModalState } from '../recoil/writeNoticeModal'
 import { firestore } from '../firebaseConfig'
-import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore'
+import { collection, onSnapshot, orderBy, query } from '@firebase/firestore'
 import { Entypo } from '@expo/vector-icons';
 import NoticeCard from '../components/NoticeCard'
-import { ScrollView } from 'react-native'
+
 
 const HomeScreen = () => {
   const { fetchVerifyingToken } = useUserInfo();
   // const { getNotices,notices } = useNotice();
   const [notices,setNotices] = useState([]);
   const [isVerified,setIsVerified] = useState(false);
-  const userInfo = useRecoilValue(userInfoState);
+  
   const [isShowWriteNoticeModal,setIsShowWriteMoticeModal] = useRecoilState(writeNoticeModalState);
 
   const toggleWritePageHandler = () => {
@@ -32,7 +32,9 @@ const HomeScreen = () => {
   }, [])
 
   useEffect(() => {
-    const unsubscription = onSnapshot(collection(firestore,'Notice'), (snapshot) => {
+    const q = query(collection(firestore, "Notice"),orderBy('createdAt','desc'));
+    
+    const unsubscription = onSnapshot(q, (snapshot) => {
       const ntc = [];
       snapshot.forEach((doc) => {
         ntc.push(doc.data());
@@ -44,9 +46,8 @@ const HomeScreen = () => {
   return (
     <>
     <RichTextEditor />
-
-    <ScrollView style={styles.container}>
       <FlatList
+        style={styles.container}
         keyExtractor={(item) => item.id}
         data={notices}
         extraData={notices}
@@ -64,8 +65,6 @@ const HomeScreen = () => {
         id={item.id}
       />}
       />
-      
-    </ScrollView>
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={toggleWritePageHandler}
@@ -83,7 +82,6 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor:'#fff',
-    minHeight:'100%'
+    backgroundColor:'#fff'
   }
 })

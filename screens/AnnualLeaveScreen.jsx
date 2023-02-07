@@ -388,7 +388,7 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
         borderRadius:16,
         backgroundColor:'#2d63e2'
         }}>
-        <NotoText style={{fontSize:32,color:'#fff'}}>입사년월을 선택해주세요.</NotoText>
+        <NotoText style={{fontSize:24,color:'#fff'}}>입사년월을 선택해주세요.</NotoText>
         <View style={{height:20}} />
         <NotoText style={{color:'#fff'}}>선택 이후에는 수정할 수 없습니다.</NotoText>
       </TouchableOpacity>

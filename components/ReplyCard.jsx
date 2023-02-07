@@ -105,7 +105,7 @@ const ReplyCard = ({createdAt,department,email,id,name,position,reply}) => {
     </Modal>
 
     
-    <View style={{borderWidth: 1, borderColor: '#dde', borderRadius: 4}}>
+    <View style={{borderWidth: 1, borderColor: '#dde', borderRadius: 4,marginBottom:16}}>
       <View style={{flexDirection: 'row'}}>
         <View style={{ backgroundColor: '#f6f9ff',width:'70%',padding:16, position:'relative'}}>
           <NotoText>{reply}</NotoText>

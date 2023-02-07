@@ -1,192 +1,114 @@
-import {
-  Pressable,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-  Dimensions,
-  TextInput,
-  TouchableWithoutFeedback,
-  FlatList,
-  ActivityIndicator
-} from 'react-native';
-import React, { useState } from 'react';
-import RenderHTML, {defaultSystemFonts} from 'react-native-render-html';
+import { Image, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import React, { useEffect } from 'react';
 import useSeparateTime from '../hooks/useSeparateTime';
-import useNotice from '../hooks/useNotice';
-import { AntDesign } from '@expo/vector-icons';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../recoil/userInfo';
-
-import ReplyCard from './ReplyCard';
 import NotoText from './common/NotoText';
-import * as Constants from 'expo-constants';
-const systemFonts = [...Constants.default.systemFonts, 'Noto400','Noto500','Noto700']
-
-const { width: deviceWidth } = Dimensions.get('window');
-
-const tagStyles = {
-  body: {
-    backgroundColor: '#f6f9ff',
-    color: '#061457',
-    width: deviceWidth > 330 ? 360 : 300,
-    padding: 32,
-    marginTop: 16,
-    marginBottom:16,
-    fontSize: 14,
-    fontFamily:'Noto400'
-  },
-  img: {
-    width: deviceWidth > 330 ? 250 : 330,
-  },
-  b: {
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-};
+import { useNavigation } from '@react-navigation/native';
+import useNotice from '../hooks/useNotice';
 
 
+const NoticeCard = ({
+  title,
+  id,
+  content,
+  department,
+  email,
+  position,
+  like,
+  reply,
+  read,
+  createdAt,
+  writer,
+}) => {
+  const navigation = useNavigation();
 
-const NoticeCard = ({title,id,content,department,email,position,like,reply,read,createdAt,writer}) => {
-  
-   
   const { width } = useWindowDimensions();
-  const [isContentShow, setIsContentShow] = useState(false);
+
   const { createdTime } = useSeparateTime(createdAt);
-  const { readNotice,controlLikes,createReply } = useNotice()
-  const userInfo = useRecoilValue(userInfoState);
-  const [isMyLike,setIsMyLike] = useState(like.findIndex((item) => item === userInfo.email) >= 0);
-  const [replyValue,setReplyValue] = useState();
-  const [isLoading,setIsLoading] = useState(false);
-  const toggleContentHandler = () => {
-    setIsContentShow((prev) => !prev);
+  const { readNotice } = useNotice();
+  const navigateDetailPageHandler = () => {
     readNotice(id);
+    navigation.navigate('NoticeDetail', {
+      id,
+      like,
+      reply,
+      department,
+      email,
+      content,
+      title,
+      email,
+      position,
+      read,
+      createdAt,
+      writer,
+      
+    });
   };
   
-  const toggleLikeHandler = () => {
-    controlLikes(id,email);
-    setIsMyLike((prev) => !prev);
-  }
-  const changeReplyValueHandler = (text) => {
-    setReplyValue(text);
-  }
-  const submitReplyHandler = () => {
-    setIsLoading(true);
-    const replyObj = {
-      id,
-      name:userInfo.name,
-      email:userInfo.email,
-      reply:replyValue,
-      department:userInfo.department,
-      position:userInfo.position
-    }
-    createReply(replyObj).then(() => {
-      setIsLoading(false);
-      setReplyValue('');
-    });
-  }
-  
+  useEffect(() => {
+    navigation.setOptions({
+      
+    })  
+  }, [])
   return (
     <View
-      style={{ alignItems: 'center', width: '100%', backgroundColor: '#fff',paddingHorizontal:24}}
+      style={{
+        alignItems: 'center',
+        width: '100%',
+        backgroundColor: '#fff',
+        paddingHorizontal: 24,  
+        
+        
+      }}
       key={id}
     >
+      
       <TouchableOpacity
-        onPress={toggleContentHandler}
+        onPress={navigateDetailPageHandler}
         style={{
+          flexDirection:'row',
           borderBottomWidth: 1,
           borderBottomColor: '#2d63e2',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          paddingVertical: 4,
+          paddingVertical: 16,
+          paddingHorizontal:24,
+          width,
           backgroundColor: '#fff',
-          width: width - 48,
         }}
       >
-        <View style={{paddingVertical:2,borderBottomWidth:1, borderBottomColor:'#ccc'}}>
+        
+        <View style={{width:48,justifyContent:'flex-end',alignItems:'flex-end'}}>
+        <Image 
+          style={{width:48,height:48}}
+          source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUd_xVsmeViKMvrtNOguehlTjA-vsqyn8fyQ&usqp=CAU' }}
+          />
+        </View> 
+
+        <View style={{marginLeft:16,flex:1,justifyContent:'center',alignItems:'flex-start'}}>
           <NotoText style={{ fontSize: 18 }}>{title}</NotoText>
+          <View
+          style={{
+            
+            flexDirection:'row',
+            justifyContent:'flex-start',
+            alignItems: 'flex-start',
+            width: '100%',
+          }}
+        >
+          <NotoText style={{ fontSize: 12, color:'#a7a7a7' }}>
+            {writer} {position}
+          </NotoText>
+          <View style={{width:8}} />
+          <NotoText style={{ fontSize: 12, color:'#ccc' }}>
+            {createdTime.month >= 10 ? createdTime.month : '0' + createdTime.month}-{createdTime.day >= 10 ? createdTime.day : '0' + createdTime.day} {createdTime.hours >= 10 ? createdTime.hours : '0' + createdTime.hours}:{createdTime.minutes >= 10 ? createdTime.minutes : '0' + createdTime.minutes}
+          </NotoText>
+          <View style={{width:8}} />
+          <NotoText style={{ fontSize: 12, color:'#ccc' }}>조회수 {read}</NotoText>
         </View>
-        <View style={{marginVertical:4,justifyContent:'flex-end',alignItems:'flex-end',width:'100%'}}>
-          <NotoText style={{ fontSize: 14 }}>작성일자: {createdTime.year}년 {createdTime.month}월 {createdTime.day}일 {createdTime.hours}시 {createdTime.minutes}분 {createdTime.seconds}초</NotoText>
-          <NotoText style={{ fontSize: 14 }}>작성자: {writer}{' '}{position}</NotoText>
-          <NotoText style={{ fontSize: 14 }}>조회수 {read}</NotoText>
         </View>
       </TouchableOpacity>
-      {/* title을 클릭하면 해당 글 내용이 아래로 펼쳐지게끔 만들기 */}
-      {isContentShow && (
-        <>
-        <RenderHTML
-          source={{ html: content }}
-          contentWidth={width}
-          tagsStyles={tagStyles}
-          systemFonts={systemFonts}
-        />
-        <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center',width:'100%',marginBottom:8}}>
-        <Pressable
-        onPress={toggleLikeHandler}
-        style={{marginRight:8}}
-        >
-        { isMyLike
-        ? <AntDesign name="heart" size={20} color="red" />
-        : <AntDesign name="hearto" size={20} color="red" />
-        }
-        </Pressable>
-        <NotoText>{like.length}</NotoText>
-        </View>
-        <View style={{ marginVertical:16, width:'100%', alignItems:'flex-start' }}>
-          <NotoText>댓글({reply.length})</NotoText>
-        </View>
-        <FlatList
-            keyExtractor={(item) => item.id}
-            data={reply}
-            extraData={reply}
-            renderItem={({item}) =>
-            <ReplyCard
-              id={item.id}
-              createdAt={item.createdAt}
-              department={item.department}
-              email={item.email}
-              name={item.name}
-              position={item.position}
-              reply={item.reply}
-              />
-            }
-            ItemSeparatorComponent={<View style={{height:16}} />}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={true}
-            // ListFooterComponent={<View style={{height:20}} />}
-            />
-        <View style={{borderWidth:1, borderColor:'#dde',padding:8,borderRadius:4,marginTop:16,backgroundColor:'#f6f9ff'}}>
-        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-        <TextInput
-          value={replyValue}
-          onChangeText={(text) => changeReplyValueHandler(text)}
-          numberOfLines={4}
-          multiline={true}
-          style={{
-            backgroundColor:'#fff',
-            padding:16,borderWidth:1,borderRadius:4, borderColor:'#2d63e2',width:'80%'}} placeholder=" 댓글을 적어주세요" />
-        <View style={{justifyContent:'center',padding: 8}}>
-          <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={submitReplyHandler}
-          disabled={isLoading}
-          style={{borderWidth:1, borderColor:'#2d63e2',borderRadius:4,paddingHorizontal:8,backgroundColor:'#fff',justifyContent:'center',alignItems:'center'}}>
-          {isLoading ?  <ActivityIndicator /> : <NotoText style={{fontSize:10}}>작성하기</NotoText>}
-          </TouchableOpacity>
-          {/* <Pressable
-          onPress={() => {}}
-          style={{borderWidth:1, borderColor:'red',borderRadius:4,padding:8,backgroundColor:'#fff'}}>
-          <Text>취소하기</Text>
-          </Pressable> */}
-        </View>
-        </View>
-        </View>
-        </>
-      )}
     </View>
   );
 };
 
 export default NoticeCard;
-
