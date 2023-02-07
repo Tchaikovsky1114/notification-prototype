@@ -19,6 +19,7 @@ import ReportScreen from './screens/ReportScreen';
 import AttendanceScreen from './screens/AttendanceScreen';
 import AnnualDetailScreen from './screens/AnnualDetailScreen';
 import NoticeDetail from './screens/NoticeDetail';
+import { Alert } from 'react-native';
 
 
 Notifications.setNotificationHandler({
@@ -39,13 +40,13 @@ const registerForPushNotification = async (userId) => {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      Alert.alert('Failed to get push token for push notification!');
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync({experienceId: "@swadpia/notification-prototype"})).data;
     console.log(token);
   } else {
-    alert('Must use physical device for Push Notifications');
+    Alert.alert('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {

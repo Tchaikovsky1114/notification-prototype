@@ -8,11 +8,7 @@ import { View } from 'react-native';
 
 
 SplashScreen.preventAutoHideAsync();
-// const appConfig = require('./app.json');
-// const projectId = appConfig?.expo?.extra?.eas?.projectId;
-// const token = (await Notifications.getExpoPushTokenAsync({
-// 	projectId
-// })).data;
+
 
 
 

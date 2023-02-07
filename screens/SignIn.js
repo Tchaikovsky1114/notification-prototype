@@ -1,8 +1,8 @@
-import { ActivityIndicator, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, Pressable, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleAuthProvider } from 'firebase/auth';
+
 import getEnvVars from '../environment';
 import { storeData } from '../util/storeLocalData';
 import { useNavigation } from '@react-navigation/native';
@@ -12,8 +12,7 @@ import { userInfoState } from '../recoil/userInfo';
 import ExtraData from '../components/ExtraData';
 import NotoText from '../components/common/NotoText';
 
-const { FIREBASE_ANDROID_CLIENT_ID, FIREBASE_WEB_CLIENT_ID } = getEnvVars();
-const provider = new GoogleAuthProvider();
+const { FIREBASE_ANDROID_CLIENT_ID } = getEnvVars();
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -44,8 +43,12 @@ const SignIn = () => {
             if(result.status === 200) {
               setIsLoading(false)
               setUserInfo(() => ({
+                id: result.id,
                 email: result.email,
-                name: result.name
+                name: result.name,
+                department: result.department,
+                position: result.position,
+                pushToken: result.pushToken
               })
               );
             }
@@ -91,7 +94,6 @@ const SignIn = () => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'center',
-              
               width: 240,
               height: 54,
               borderWidth: 1,

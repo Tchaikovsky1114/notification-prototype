@@ -53,6 +53,7 @@ const RichTextEditor = () => {
     });
     setIsShow(false);
   }
+  console.log(userInfo);
 
   const uploadImage = async(uri,imageName) => {
     const response = await fetch(uri);
