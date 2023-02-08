@@ -14,6 +14,8 @@ const createReply = require("./createReply");
 const createAnnualLeave = require("./createAnnualLeave");
 const moment = require('moment');
 const getAnnualLeave = require("./getAnnualLeave");
+const startWork = require("./startWork");
+const endWork = require("./endWork");
 
 
 admin.initializeApp({
@@ -33,7 +35,8 @@ exports.controlLikes = regionalFunctions.https.onRequest(controlLikes);
 exports.createReply = regionalFunctions.https.onRequest(createReply);
 exports.createAnnualLeave = regionalFunctions.https.onRequest(createAnnualLeave);
 exports.getAnnualLeave = regionalFunctions.https.onRequest(getAnnualLeave);
-
+exports.startWork = regionalFunctions.https.onRequest(startWork);
+exports.endWork = regionalFunctions.https.onRequest(endWork);
 
 
 

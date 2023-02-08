@@ -2,8 +2,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from './screens/SignIn';
-import { useEffect, useLayoutEffect, useRef,useState } from 'react';
-import { userInfoState } from './recoil/userInfo';
+import { useEffect, useRef,useState } from 'react';
+
 import { useRecoilState } from 'recoil';
 import HomeScreen from './screens/HomeScreen';
 import { pushTokenState } from './recoil/pushtoken';
@@ -166,7 +166,7 @@ const Main = () => {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
 
   const navigationRef = useRef(null);
 

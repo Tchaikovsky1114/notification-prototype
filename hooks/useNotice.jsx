@@ -1,5 +1,4 @@
-import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const useNotice = () => {
   const [notices, setNotices] = useState([]);

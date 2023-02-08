@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import AttendanceCalendar from '../components/AttendanceCalendar'
 
 const AttendanceScreen = () => {
   return (
-    <View>
-      <Text>AttendanceScreen</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <AttendanceCalendar />
+    </ScrollView>
   )
 }
 
 export default AttendanceScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor:'#fff'
+  }
+})
