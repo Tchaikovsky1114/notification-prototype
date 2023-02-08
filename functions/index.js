@@ -16,6 +16,7 @@ const moment = require('moment');
 const getAnnualLeave = require("./getAnnualLeave");
 const startWork = require("./startWork");
 const endWork = require("./endWork");
+const getAttendance = require("./getAttendance");
 
 
 admin.initializeApp({
@@ -37,7 +38,7 @@ exports.createAnnualLeave = regionalFunctions.https.onRequest(createAnnualLeave)
 exports.getAnnualLeave = regionalFunctions.https.onRequest(getAnnualLeave);
 exports.startWork = regionalFunctions.https.onRequest(startWork);
 exports.endWork = regionalFunctions.https.onRequest(endWork);
-
+exports.getAttendance = regionalFunctions.https.onRequest(getAttendance);
 
 
 exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {

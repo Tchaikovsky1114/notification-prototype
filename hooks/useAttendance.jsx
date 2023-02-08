@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 
 const useAttendance = () => {
-  const [attendance,setAttendance] = useState();
+  const [attendance,setAttendance] = useState([]);
   
   const startWork = async (email,date,entrance) => {
       try {
@@ -46,7 +46,27 @@ const useAttendance = () => {
       console.error(error);
     }
 }
-  return {attendance, startWork};
+const getAttendance = async (email) => {
+  try {
+    const response = await fetch('https://asia-northeast3-notification-aa618.cloudfunctions.net/getAttendance',{
+      method: 'POST',
+      body: JSON.stringify({
+        email
+      }),
+      headers:{
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await response.json();
+    console.log(data);
+    setAttendance(data.attendance);
+    return data; 
+  } catch (error) {
+    console.error(error);
+  }
+}
+  return {attendance, startWork, endWork, getAttendance};
 }
 
 export default useAttendance

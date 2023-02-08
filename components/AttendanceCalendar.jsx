@@ -2,13 +2,17 @@ import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-n
 import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment';
 import NotoText from './common/NotoText';
+import useAttendance from '../hooks/useAttendance';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/userInfo';
 
-
-
-const AttendanceCalendar = () => {
-  const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
   const weekDays = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
   const nDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+const AttendanceCalendar = () => {
+  const { attendance, startWork, endWork, getAttendance } = useAttendance()
+  const userInfo = useRecoilValue(userInfoState);
   const [activeDate,setActiveDate] = useState(new Date());
   const [year,setYear] = useState(new Date().getFullYear());
   const [month,setMonth] = useState(new Date().getMonth());
@@ -20,8 +24,7 @@ const AttendanceCalendar = () => {
     let matrix = [];
     let maxDays = nDays[month];
     let counter = 1;
-    console.log('month :',month); 
-    console.log('maxDays:',maxDays);
+    
     if(month == 1) {
       if((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
         maxDays += 1;
@@ -38,12 +41,15 @@ const AttendanceCalendar = () => {
         }
       }
     }
+    // matrix[0] = weekDays
     return matrix
   };
+    
+  useEffect(() => {
+    getAttendance(userInfo.email);
+  },[])
   
-  
-  
-  console.log('==moment==',moment().format('yyyy-MM-DD HH:mm:ss'));
+  // console.log('==moment==',moment().format('yyyy-MM-DD HH:mm:ss'));
   const matrix = generateMatrix();
   useEffect(() => {
     setYear(activeDate.getFullYear());
@@ -53,6 +59,10 @@ const AttendanceCalendar = () => {
   }, [activeDate])
 
   
+  // console.log();
+  // console.log('find',attendance.find((att) => att.date === `${year}-${month + 1 >= 10 ? (month + 1) : '0' + (month + 1)}-08`));
+  // console.log(attendance.find((att) => console.log('att date',att.date)));
+  console.log(`${year}-${month + 1 >= 10 ? (month + 1) : '0' + (month + 1)}-08`)
   
   return (
     <View key={'calendar'} style={{position:'relative'}}>
@@ -124,9 +134,17 @@ const AttendanceCalendar = () => {
                 <NotoText style={{fontSize:10}}>{(item !== -1 && colIndex === 0) ? '일' : (item !== -1 && colIndex === 1) ? '월' : (item !== -1 && colIndex === 2) ? '화' : (item !== -1 && colIndex === 3) ? '수' : (item !== -1 && colIndex === 4) ? '목' : (item !== -1 && colIndex === 5) ? '금' : (item !== -1 && colIndex === 6) ? '토' : null } </NotoText>
               </NotoText>
               </View>
-                <NotoText style={{flex:1,textAlign:'center'}}>08:58:30</NotoText>
-                <NotoText style={{flex:1,textAlign:'center'}}>18:03:20</NotoText>
-                <NotoText style={{flex:1,textAlign:'center'}}>{activeDate.getFullYear()}-{activeDate.getMonth()}-{activeDate.getDate()}</NotoText>
+              {/* {attendance.find((item) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item}` === item.date)} */}
+                {attendance.length > 0
+                ? <NotoText style={{flex:1,textAlign:'center'}}>{attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date) ? 'exist' : 'none'}</NotoText>
+                : <NotoText style={{flex:1,textAlign:'center'}}>해당사항 없음</NotoText>
+                }
+                {attendance.length > 0
+                ? <NotoText style={{flex:1,textAlign:'center'}}>{attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date) ? 'exist' : 'none'}</NotoText>
+                : <NotoText style={{flex:1,textAlign:'center'}}>해당사항 없음</NotoText>
+                }
+                
+                <NotoText style={{flex:1,textAlign:'center'}}>{year}-{month + 1 >= 10 ? month : '0' + (month + 1)}-{item >= 10 ? item : '0' + item}</NotoText>
               </View>
               </View>
             );
