@@ -20,7 +20,7 @@ module.exports = async function(req,res) {
   
   const attendance = await attendanceRef.get();
   const data = attendance.data()
-  return await res.json({message: '출근시간이 저장되었습니다.',attendance:data});
+  return await res.json({message: '출근시간이 저장되었습니다.',attendance: data});
 
 
 }

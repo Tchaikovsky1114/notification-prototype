@@ -83,13 +83,9 @@ const NoticaDetail = () => {
   const navigation = useNavigation();
 
   const toggleLikeHandler = () => {
-    // if(isMyLike){
-    //   setLikeCount((prev) => prev-=1);
-    // }else{
-    //   setLikeCount((prev) => prev+=1);
-    // }
+
     setIsMyLike((prev) => !prev);
-    controlLikes(id, email);
+    controlLikes(id, userInfo.email);
   };
   const changeReplyValueHandler = (text) => {
     setReplyValue(text);
@@ -109,7 +105,7 @@ const NoticaDetail = () => {
       setReplyValue('');
     });
   };
-
+  
   useEffect(() => {
     navigation.setOptions({
       title,
