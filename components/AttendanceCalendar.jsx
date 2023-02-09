@@ -1,17 +1,20 @@
-import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native'
+import { Alert, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment';
 import NotoText from './common/NotoText';
 import useAttendance from '../hooks/useAttendance';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { firestore } from '../firebaseConfig';
+import useAlert from '../hooks/useAlert';
 
 const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
   const weekDays = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
   const nDays = [31,28,31,30,31,30,31,31,30,31,30,31];
 
 const AttendanceCalendar = () => {
-  const { attendance, startWork, endWork, getAttendance } = useAttendance()
+  const { attendance, setAttendance, startWork, endWork, getAttendance } = useAttendance()
   const userInfo = useRecoilValue(userInfoState);
   const [activeDate,setActiveDate] = useState(new Date());
   const [year,setYear] = useState(new Date().getFullYear());
@@ -19,7 +22,8 @@ const AttendanceCalendar = () => {
   const [firstDay,setFirstDay] = useState();
   const [row,setRow] = useState([]);
   const { width } = useWindowDimensions();
-  
+  const {alert} = useAlert();
+
   const generateMatrix = () => {
     let matrix = [];
     let maxDays = nDays[month];
@@ -49,7 +53,7 @@ const AttendanceCalendar = () => {
     getAttendance(userInfo.email);
   },[])
   
-  // console.log('==moment==',moment().format('yyyy-MM-DD HH:mm:ss'));
+  
   const matrix = generateMatrix();
   useEffect(() => {
     setYear(activeDate.getFullYear());
@@ -59,34 +63,66 @@ const AttendanceCalendar = () => {
   }, [activeDate])
 
   
-  // console.log();
-  // console.log('find',attendance.find((att) => att.date === `${year}-${month + 1 >= 10 ? (month + 1) : '0' + (month + 1)}-08`));
-  // console.log(attendance.find((att) => console.log('att date',att.date)));
-  console.log(`${year}-${month + 1 >= 10 ? (month + 1) : '0' + (month + 1)}-08`)
   
+  const workStartHandler = () => {
+    if(attendance.find((att) => att.date === moment().format('yyyy-MM-DD'))) {
+      return alert({title:'출근은 번복할 수 없습니다.'});
+    }
+    alert({
+      buttonText1:'출근',
+      buttonText2:'취소',
+      cancelable:true,
+      content:'출근하시겠습니까?',
+      onPress: () => startWork(userInfo.email,moment().format('yyyy-MM-DD'),moment().format('HH:mm:ss')),
+      title: moment().format('yyyy년 MM월 DD일')
+    });
+  }
+  const workEndHandler = () => {
+    if(!attendance.find((att) => att.date === moment().format('yyyy-MM-DD'))) {
+      return alert({title:'출근 기록이 존재하지 않습니다.'});
+    }
+    alert({
+      buttonText1:'퇴근',
+      buttonText2:'취소',
+      cancelable:true,
+      content:'퇴근하시겠습니까?',
+      onPress: () => endWork(userInfo.email,moment().format('yyyy-MM-DD'),moment().format('HH:mm:ss')),
+      title: moment().format('yyyy년 MM월 DD일')
+    });
+  }
+  
+  
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(firestore, 'Attendance', userInfo.email), (doc) => {
+      setAttendance(doc.data().attendance); 
+    });
+    return () => unsub();
+  }, []);
+
   return (
     <View key={'calendar'} style={{position:'relative'}}>
-      <View style={{flexDirection:'row', position:'absolute', top: 12, right: 24}}>
+      
+      <View style={{justifyContent:'center',alignItems:'center',marginVertical:16}}>
+      <NotoText style={{fontSize:24}}>{activeDate.getFullYear()}년 {months[activeDate.getMonth()]}</NotoText>
+      </View>
+      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',paddingHorizontal:24}}>
         <TouchableOpacity
-        onPress={() => {}}
-        style={{borderWidth:1,paddingVertical:4,width:80, height:53 ,paddingHorizontal:8,borderRadius:8,borderColor:'#f41',alignItems:'center',justifyContent:'center'}}
+        onPress={workStartHandler}
+        style={{borderWidth:1,paddingVertical:4,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#f41',alignItems:'center',justifyContent:'center'}}
         activeOpacity={0.5}
         >
           <NotoText style={{color:'#f41',textAlign:'center',fontSize:16}}>출근하기</NotoText>
         </TouchableOpacity>
         <View style={{width:16}} />
         <TouchableOpacity
-        onPress={() => {}}
-        style={{borderWidth:1,paddingVertical:4,width:80, height:53 ,paddingHorizontal:8,borderRadius:8,borderColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
+        onPress={workEndHandler}
+        style={{borderWidth:1,paddingVertical:4,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
         activeOpacity={0.5}
         >
           <NotoText style={{color:'#2d63e2',textAlign:'center',fontSize:16}}>퇴근하기</NotoText>
         </TouchableOpacity>
       </View>
-      <View style={{justifyContent:'center',alignItems:'center',marginVertical:16}}>
-      <NotoText style={{fontSize:24}}>{activeDate.getFullYear()}년 {months[activeDate.getMonth()]}</NotoText>
-      </View>
-      
       {
         matrix.map((row, rowIndex) => {
           let weeksIndex = rowIndex <= 6
@@ -136,15 +172,32 @@ const AttendanceCalendar = () => {
               </View>
               {/* {attendance.find((item) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item}` === item.date)} */}
                 {attendance.length > 0
-                ? <NotoText style={{flex:1,textAlign:'center'}}>{attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date) ? 'exist' : 'none'}</NotoText>
-                : <NotoText style={{flex:1,textAlign:'center'}}>해당사항 없음</NotoText>
+                ? <NotoText style={{flex:1,textAlign:'center'}}>
+                  {attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date)
+                  ? attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance
+                  : '-'
+                  }
+                  </NotoText>
+                : <NotoText style={{flex:1,textAlign:'center'}}>{' '}</NotoText>
                 }
                 {attendance.length > 0
-                ? <NotoText style={{flex:1,textAlign:'center'}}>{attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date) ? 'exist' : 'none'}</NotoText>
-                : <NotoText style={{flex:1,textAlign:'center'}}>해당사항 없음</NotoText>
+                ? <NotoText style={{flex:1,textAlign:'center'}}>
+                  {attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date)
+                  ? attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave
+                  : '-'
+                  }
+                  </NotoText>
+                : <NotoText style={{flex:1,textAlign:'center'}}>{' '}</NotoText>
                 }
                 
-                <NotoText style={{flex:1,textAlign:'center'}}>{year}-{month + 1 >= 10 ? month : '0' + (month + 1)}-{item >= 10 ? item : '0' + item}</NotoText>
+                <NotoText style={{flex:1,textAlign:'center'}}>
+                {   (attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date) && attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave)
+                  ? (((+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(3,2)) - (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(3,2)))) / 60)).toFixed(0) > 0
+                  ? (((+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(3,2)) - (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(3,2)))) / 60)).toFixed(0) - 1 + 'H'
+                  : (((+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).leave.substr(3,2)) - (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(0,2) * 60 + (+attendance.find((att) => `${year}-${month + 1 >= 10 ? (month + 1) : ('0' + (month + 1))}-${item >= 10 ? item : '0' + item}` === att.date).entrance.substr(3,2)))) / 60)).toFixed(0) + 'H'
+                  : '-'
+                  }
+                </NotoText>
               </View>
               </View>
             );

@@ -66,7 +66,7 @@ const getAttendance = async (email) => {
     console.error(error);
   }
 }
-  return {attendance, startWork, endWork, getAttendance};
+  return {attendance, setAttendance, startWork, endWork, getAttendance};
 }
 
 export default useAttendance
