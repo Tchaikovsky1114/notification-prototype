@@ -23,7 +23,7 @@ const AttendanceCalendar = () => {
   const [row,setRow] = useState([]);
   const { width } = useWindowDimensions();
   const {alert} = useAlert();
-  const [totalWorkHour,setTotalWorkhour] = useState([]);
+  const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState([]);
   const generateMatrix = () => {
     let matrix = [];
     let maxDays = nDays[month];
@@ -48,7 +48,7 @@ const AttendanceCalendar = () => {
     // matrix[0] = weekDays
     return matrix
   };
-    
+  const [totalWorkHourInMonth,setTotalWorkHourInMonth] = useState({});
   useEffect(() => {
     getAttendance(userInfo.email);
   },[])
@@ -106,40 +106,25 @@ const AttendanceCalendar = () => {
     });
     return () => unsub();
   }, []);
-  
+  let arr = [];
   useEffect(() => {
     if(!attendance) return;
     const att = attendance;
-    let totalSeconds = {};
     
+    let totalSeconds = {};
     for(let i = 0; i < att.length; i++) {
       let workSeconds = 0; 
       for(let j = 0; j < att.length; j++) { 
         if(att[j].leave && moment(att[i].date).weeks() === moment(att[j].date).weeks()){
           workSeconds += moment(att[j].leave,"HH:mm:ss").diff(moment(att[j].entrance,"HH-mm:ss"),'seconds');
-          // console.log(moment(att[j].leave,"HH:mm:ss").diff(moment(att[j].entrance,"HH-mm:ss"),'seconds'));
-          // console.log(workSeconds);
-          // console.log('hi');
         }
       }
       const mmt = moment(att[i].date)
-      console.log(mmt);
-      
-
       totalSeconds[`${moment(att[i].date).year()}-${moment(att[i].date).month() + 1}-week${weekOfMonth(mmt)}`] = workSeconds;
-      // totalSeconds[`${moment(att[i].date).year()}${moment(att[i].date).weeks()}`] = workSeconds;
     }
-    setTotalWorkhour(totalSeconds)
-    // att.forEach((at) => {
-    //   if(moment(at.date).startOf('isoWeeks'))
-    //   totalSeconds += moment.duration(at.entrance).asSeconds();
-    // })
-    
+    const result = Object.keys()
   }, [attendance])
-  console.log(totalWorkHour);
-  // console.log(moment('19:10:11',"HH:mm:ss").diff(moment('09:30:00',"HH:mm:ss"),'minutes'))
-  // console.log(moment('2023-02-13').startOf('isoWeeks'));
-  // console.log(moment.duration('10:40:31').asSeconds());
+  
   return (
     <View key={'calendar'} style={{position:'relative'}}>
       
@@ -166,7 +151,10 @@ const AttendanceCalendar = () => {
       <View style={{justifyContent:'center',alignItems:'center',marginTop:40,marginHorizontal:16,borderRadius:8,borderWidth:1,borderColor:'#c7c7c7'}}>
         
         <View style={{flexDirection:'row',flex:1,justifyContent:'center',alignItems:'center',padding:16}}>
-          <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}><NotoText>0H 0M 0S</NotoText><NotoText>이번주 누적</NotoText></View>
+          <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}>
+            <NotoText>{}0H 0M 0S</NotoText>
+            <NotoText>이번주 누적</NotoText>
+            </View>
           <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}><NotoText>0H 0M 0S</NotoText><NotoText>이번주 초과</NotoText></View>
           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><NotoText>0H 0M 0S</NotoText><NotoText>이번주 잔여</NotoText></View>
         </View>
