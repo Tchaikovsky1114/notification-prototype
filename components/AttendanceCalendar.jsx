@@ -91,6 +91,13 @@ const AttendanceCalendar = () => {
     });
   }
   
+  const weekOfMonth = (input = moment()) => {
+    const firstDayOfMonth = input.clone().startOf('month');
+    const firstDayOfWeek = firstDayOfMonth.clone().startOf('week');
+
+    const offset = firstDayOfMonth.diff(firstDayOfWeek,'days');
+    return Math.ceil((input.date() + offset) / 7);
+  }
   
 
   useEffect(() => {
@@ -115,9 +122,12 @@ const AttendanceCalendar = () => {
           // console.log('hi');
         }
       }
+      const mmt = moment(att[i].date)
+      console.log(mmt);
       
-      
-      totalSeconds[`${moment(att[i].date).year()}${moment(att[i].date).weeks()}`] = workSeconds;
+
+      totalSeconds[`${moment(att[i].date).year()}-${moment(att[i].date).month() + 1}-week${weekOfMonth(mmt)}`] = workSeconds;
+      // totalSeconds[`${moment(att[i].date).year()}${moment(att[i].date).weeks()}`] = workSeconds;
     }
     setTotalWorkhour(totalSeconds)
     // att.forEach((at) => {
