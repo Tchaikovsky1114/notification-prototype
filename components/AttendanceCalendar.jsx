@@ -10,8 +10,9 @@ import { firestore } from '../firebaseConfig';
 import useAlert from '../hooks/useAlert';
 
 const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-  const weekDays = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
-  const nDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+const weekDays = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+const nDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+const fourtyHourToMilliseconds = 144000000;
 
 const AttendanceCalendar = () => {
   const { attendance, setAttendance, startWork, endWork, getAttendance } = useAttendance()
@@ -23,7 +24,7 @@ const AttendanceCalendar = () => {
   const [row,setRow] = useState([]);
   const { width } = useWindowDimensions();
   const {alert} = useAlert();
-  const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState([]);
+  const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState({});
   const generateMatrix = () => {
     let matrix = [];
     let maxDays = nDays[month];
@@ -48,11 +49,8 @@ const AttendanceCalendar = () => {
     // matrix[0] = weekDays
     return matrix
   };
-  const [totalWorkHourInMonth,setTotalWorkHourInMonth] = useState({});
-  useEffect(() => {
-    getAttendance(userInfo.email);
-  },[])
-  
+  const [totalWorkHourInMonth,setTotalWorkHourInMonth] = useState([]);
+
   
   const matrix = generateMatrix();
   useEffect(() => {
@@ -62,8 +60,6 @@ const AttendanceCalendar = () => {
     
   }, [activeDate])
 
-  
-  
   const workStartHandler = () => {
     if(attendance.find((att) => att.date === moment().format('yyyy-MM-DD'))) {
       return alert({title:'출근은 번복할 수 없습니다.'});
@@ -99,6 +95,9 @@ const AttendanceCalendar = () => {
     return Math.ceil((input.date() + offset) / 7);
   }
   
+  useEffect(() => {
+    getAttendance(userInfo.email);
+  },[])
 
   useEffect(() => {
     const unsub = onSnapshot(doc(firestore, 'Attendance', userInfo.email), (doc) => {
@@ -106,7 +105,7 @@ const AttendanceCalendar = () => {
     });
     return () => unsub();
   }, []);
-  let arr = [];
+  
   useEffect(() => {
     if(!attendance) return;
     const att = attendance;
@@ -120,10 +119,25 @@ const AttendanceCalendar = () => {
         }
       }
       const mmt = moment(att[i].date)
-      totalSeconds[`${moment(att[i].date).year()}-${moment(att[i].date).month() + 1}-week${weekOfMonth(mmt)}`] = workSeconds;
+      totalSeconds[`${moment(att[i].date).year()}-${moment(att[i].date).month() + 1}-${weekOfMonth(mmt)}`] = workSeconds;
     }
-    const result = Object.keys()
+    const workConvertArray = [];
+
+    for(let key in totalSeconds) {
+      workConvertArray.push({
+        weeks: key,
+        seconds: totalSeconds[key]
+      });
+    }
+
+    setTotalWorkHourInMonth(workConvertArray);
+    setTotalWorkhourInWeeks(workConvertArray.find((week) => +week.weeks.split('-')[2] === weekOfMonth()));
   }, [attendance])
+  // console.log(totalWorkHourInWeeks.find((week) => week.weeks.split('-')[2] === weekOfMonth()));
+   
+  console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))/60))
+  console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))%60))
+  // console.log(totalWorkHourInWeeks.seconds / 60);
   
   return (
     <View key={'calendar'} style={{position:'relative'}}>
@@ -152,11 +166,27 @@ const AttendanceCalendar = () => {
         
         <View style={{flexDirection:'row',flex:1,justifyContent:'center',alignItems:'center',padding:16}}>
           <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}>
-            <NotoText>{}0H 0M 0S</NotoText>
+            <NotoText>{totalWorkHourInWeeks ? moment.utc(totalWorkHourInWeeks.seconds * 1000).format('H시간 mm분') : 'loading...'}</NotoText>
             <NotoText>이번주 누적</NotoText>
             </View>
-          <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}><NotoText>0H 0M 0S</NotoText><NotoText>이번주 초과</NotoText></View>
-          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><NotoText>0H 0M 0S</NotoText><NotoText>이번주 잔여</NotoText></View>
+          <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}>
+            <NotoText>{
+              (totalWorkHourInWeeks && (totalWorkHourInWeeks.seconds * 1000) - fourtyHourToMilliseconds >= 0)
+                ? moment.utc((totalWorkHourInWeeks.seconds * 1000) - fourtyHourToMilliseconds).format('H시간 mm분')
+                : '-'}
+            </NotoText>
+            <NotoText>이번주 초과</NotoText>
+          </View>
+           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <NotoText>
+            { 
+              (((2400 - (totalWorkHourInWeeks.seconds / 60))/60) > 0)
+                ? `${Math.floor((2400 - (totalWorkHourInWeeks.seconds / 60))/60)}시간 ${Math.ceil((2400 - (totalWorkHourInWeeks.seconds / 60))%60).toFixed(0)}분`
+                : 0
+            }
+            </NotoText>
+            <NotoText>이번주 잔여</NotoText>
+          </View>
         </View>
 
         <View style={{flexDirection:'row',flex:1,justifyContent:'center',alignItems:'center',padding:16}}>
