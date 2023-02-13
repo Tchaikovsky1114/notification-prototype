@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from './screens/SignIn';
 import { useEffect, useRef,useState } from 'react';
-
+import { Entypo } from '@expo/vector-icons';
 import { useRecoilState } from 'recoil';
 import HomeScreen from './screens/HomeScreen';
 import { pushTokenState } from './recoil/pushtoken';
@@ -15,11 +15,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AnnualLeaveScreen from './screens/AnnualLeaveScreen';
-import ReportScreen from './screens/ReportScreen';
+
 import AttendanceScreen from './screens/AttendanceScreen';
 import AnnualDetailScreen from './screens/AnnualDetailScreen';
 import NoticeDetail from './screens/NoticeDetail';
 import { Alert } from 'react-native';
+import ChatScreen from './screens/ChatScreen';
 
 
 Notifications.setNotificationHandler({
@@ -105,10 +106,10 @@ const MainScreen = () => {
             : <FontAwesome5 name="umbrella-beach" size={24} color="#120a57" />
           }
 
-          if(route.name === 'Report') {
+          if(route.name === 'Chat') {
             return focused
-            ? <SimpleLineIcons name="note" size={24} color="#2d63e2" />
-            : <SimpleLineIcons name="note" size={24} color="#120a57" />
+            ? <Entypo name="chat" size={24} color="#2d63e2" />
+            : <Entypo name="chat" size={24} color="black" />
           }
 
           if(route.name === 'Attendance') {
@@ -131,8 +132,6 @@ const MainScreen = () => {
           fontSize:24
         },
         headerTitleContainerStyle:{
-          
-          
         }
       }}
       />
@@ -142,9 +141,9 @@ const MainScreen = () => {
         headerTitleAlign:'center',
       }}
       />
-      <Tab.Screen name="Report" component={ReportScreen} 
+      <Tab.Screen name="Chat" component={ChatScreen} 
       options={{
-        title:'보고서 작성',
+        title:'대화하기',
         headerTitleAlign:'center',
       }}
       />

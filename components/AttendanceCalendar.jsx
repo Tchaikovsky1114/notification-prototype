@@ -1,5 +1,5 @@
-import { Alert, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import { TouchableOpacity, useWindowDimensions, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import NotoText from './common/NotoText';
 import useAttendance from '../hooks/useAttendance';
@@ -10,7 +10,6 @@ import { firestore } from '../firebaseConfig';
 import useAlert from '../hooks/useAlert';
 
 const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const weekDays = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
 const nDays = [31,28,31,30,31,30,31,31,30,31,30,31];
 const fourtyHourToMilliseconds = 144000000;
 
@@ -21,7 +20,6 @@ const AttendanceCalendar = () => {
   const [year,setYear] = useState(new Date().getFullYear());
   const [month,setMonth] = useState(new Date().getMonth());
   const [firstDay,setFirstDay] = useState();
-  const [row,setRow] = useState([]);
   const { width } = useWindowDimensions();
   const {alert} = useAlert();
   const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState({});
@@ -135,8 +133,8 @@ const AttendanceCalendar = () => {
   }, [attendance])
   // console.log(totalWorkHourInWeeks.find((week) => week.weeks.split('-')[2] === weekOfMonth()));
    
-  console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))/60))
-  console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))%60))
+  // console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))/60))
+  // console.log(((2400 - (totalWorkHourInWeeks.seconds / 60))%60))
   // console.log(totalWorkHourInWeeks.seconds / 60);
   
   return (
@@ -180,7 +178,7 @@ const AttendanceCalendar = () => {
            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
             <NotoText>
             { 
-              (((2400 - (totalWorkHourInWeeks.seconds / 60))/60) > 0)
+              ((totalWorkHourInWeeks && totalWorkHourInWeeks.seconds && (2400 - (totalWorkHourInWeeks.seconds / 60))/60) > 0)
                 ? `${Math.floor((2400 - (totalWorkHourInWeeks.seconds / 60))/60)}시간 ${Math.ceil((2400 - (totalWorkHourInWeeks.seconds / 60))%60).toFixed(0)}분`
                 : 0
             }
@@ -296,5 +294,3 @@ const AttendanceCalendar = () => {
 }
 
 export default AttendanceCalendar
-
-const styles = StyleSheet.create({})
