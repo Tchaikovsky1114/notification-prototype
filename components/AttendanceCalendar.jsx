@@ -164,7 +164,7 @@ const AttendanceCalendar = () => {
         
         <View style={{flexDirection:'row',flex:1,justifyContent:'center',alignItems:'center',padding:16}}>
           <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}>
-            <NotoText>{totalWorkHourInWeeks ? moment.utc(totalWorkHourInWeeks.seconds * 1000).format('H시간 mm분') : 'loading...'}</NotoText>
+            <NotoText>{totalWorkHourInWeeks ? moment.utc(totalWorkHourInWeeks.seconds * 1000).format('H시간 mm분') : '-'}</NotoText>
             <NotoText>이번주 누적</NotoText>
             </View>
           <View style={{flex:1,justifyContent:'center',alignItems:'center',borderEndWidth:1,borderEndColor:'#c7c7c7'}}>
@@ -180,7 +180,7 @@ const AttendanceCalendar = () => {
             { 
               ((totalWorkHourInWeeks && totalWorkHourInWeeks.seconds && (2400 - (totalWorkHourInWeeks.seconds / 60))/60) > 0)
                 ? `${Math.floor((2400 - (totalWorkHourInWeeks.seconds / 60))/60)}시간 ${Math.ceil((2400 - (totalWorkHourInWeeks.seconds / 60))%60).toFixed(0)}분`
-                : 0
+                : '-'
             }
             </NotoText>
             <NotoText>이번주 잔여</NotoText>

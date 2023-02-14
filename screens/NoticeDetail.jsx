@@ -4,25 +4,23 @@ import {
   View,
   Pressable,
   TouchableOpacity,
-  FlatList,
   TextInput,
   ActivityIndicator,
   Dimensions,
   useWindowDimensions,
 } from 'react-native';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-
 import * as Constants from 'expo-constants';
 import useNotice from '../hooks/useNotice';
 import { userInfoState } from '../recoil/userInfo';
 import { useRecoilValue } from 'recoil';
-import RenderHTML, { defaultSystemFonts } from 'react-native-render-html';
+import RenderHTML from 'react-native-render-html';
 import ReplyCard from '../components/ReplyCard';
 import NotoText from '../components/common/NotoText';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { collection, doc, onSnapshot, where } from 'firebase/firestore';
+import {  doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import useSeparateTime from '../hooks/useSeparateTime';
 
@@ -137,7 +135,7 @@ const NoticaDetail = () => {
               borderBottomColor: '#ccc',
             }}
           >
-            <View style={{ flex: 3, marginBottom: 8 }}>
+            <View style={{ flex: 3, marginTop:16 }}>
               <NotoText style={{ fontSize: 20 }}>{title}</NotoText>
             </View>
             <View
@@ -181,7 +179,6 @@ const NoticaDetail = () => {
               </NotoText>
             </View>
           </View>
-
           <RenderHTML
             source={{ html: content }}
             contentWidth={width}

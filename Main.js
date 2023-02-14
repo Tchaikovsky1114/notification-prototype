@@ -21,6 +21,7 @@ import AnnualDetailScreen from './screens/AnnualDetailScreen';
 import NoticeDetail from './screens/NoticeDetail';
 import { Alert } from 'react-native';
 import ChatScreen from './screens/ChatScreen';
+import ChatRoomScreen from './screens/ChatRoomScreen';
 
 
 Notifications.setNotificationHandler({
@@ -218,10 +219,14 @@ const Main = () => {
           name="NoticeDetail"
           component={NoticeDetail}
           options={{}}
-        />
+          />
         <Stack.Screen
           name="AnnualLeaveDetail"
           component={AnnualDetailScreen}
+          />
+        <Stack.Screen
+          name="ChatRoom"
+          component={ChatRoomScreen}
           />
       </Stack.Navigator>
     </NavigationContainer>

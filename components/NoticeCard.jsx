@@ -40,10 +40,8 @@ const NoticeCard = ({
       read,
       createdAt,
       writer,
-      
     });
   };
-  
   useEffect(() => {
     navigation.setOptions({
       
@@ -55,9 +53,7 @@ const NoticeCard = ({
         alignItems: 'center',
         width: '100%',
         backgroundColor: '#fff',
-        paddingHorizontal: 24,  
-        
-        
+        paddingHorizontal: 24
       }}
       key={id}
     >
@@ -70,16 +66,16 @@ const NoticeCard = ({
           borderBottomColor: '#2d63e2',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingVertical: 16,
-          paddingHorizontal:24,
+          paddingVertical: 8,
+          paddingHorizontal:12,
           width,
           backgroundColor: '#fff',
         }}
       >
         
-        <View style={{width:48,justifyContent:'flex-end',alignItems:'flex-end'}}>
+        <View style={{width:32,justifyContent:'flex-end',alignItems:'flex-end',borderRadius:32,overflow:'hidden'}}>
         <Image 
-          style={{width:48,height:48}}
+          style={{width:32,height:32,borderRadius:32,}}
           source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUd_xVsmeViKMvrtNOguehlTjA-vsqyn8fyQ&usqp=CAU' }}
           />
         </View> 
@@ -88,7 +84,6 @@ const NoticeCard = ({
           <NotoText style={{ fontSize: 18 }}>{title}</NotoText>
           <View
           style={{
-            
             flexDirection:'row',
             justifyContent:'flex-start',
             alignItems: 'flex-start',

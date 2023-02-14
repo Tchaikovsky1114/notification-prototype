@@ -17,6 +17,9 @@ const getAnnualLeave = require("./getAnnualLeave");
 const startWork = require("./startWork");
 const endWork = require("./endWork");
 const getAttendance = require("./getAttendance");
+const getUsers = require("./getUsers");
+const chat = require("./chat");
+const createChatRooms = require("./createChatRooms");
 
 
 admin.initializeApp({
@@ -39,6 +42,9 @@ exports.getAnnualLeave = regionalFunctions.https.onRequest(getAnnualLeave);
 exports.startWork = regionalFunctions.https.onRequest(startWork);
 exports.endWork = regionalFunctions.https.onRequest(endWork);
 exports.getAttendance = regionalFunctions.https.onRequest(getAttendance);
+exports.getUsers = regionalFunctions.https.onRequest(getUsers);
+exports.chat = regionalFunctions.https.onRequest(chat);
+exports.createChatRooms = regionalFunctions.https.onRequest(createChatRooms);
 
 
 exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
@@ -78,6 +84,8 @@ exports.annualLeave = regionalFunctions.pubsub.schedule('0 0 1 * *').onRun(async
 
   });
 });
+
+
 regionalFunctions.firestore.document().on
 
 exports.noticeUserNotification = regionalFunctions.firestore
