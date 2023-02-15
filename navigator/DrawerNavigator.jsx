@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { createDrawerNavigator, DrawerContent, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import BottomNavigator from './BottomNavigator';
@@ -16,7 +15,6 @@ import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
 import { Text } from 'react-native';
 import { View } from 'react-native';
-import { Image } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import NotoText from '../components/common/NotoText';
 const Drawer = createDrawerNavigator();
@@ -47,7 +45,7 @@ const CustomDrawer = props => {
         </View>
 
         <View style={{flex:12}}>
-          <DrawerItemList {...props} />
+          <DrawerItemList {...props}  />
         </View>
 
         <View style={{flex:1,justifyContent:'flex-end',alignItems:'flex-end'}}>

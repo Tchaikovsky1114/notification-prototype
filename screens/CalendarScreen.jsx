@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Calendar } from 'react-native-calendars'
+import { useWindowDimensions } from 'react-native'
 
 const CalendarScreen = () => {
+  const { width } = useWindowDimensions(); 
   return (
-    <View>
-      <Text>CalendarScreen</Text>
+    <View style={{flex:1,backgroundColor:'#fff',justifyContent:'center',alignItems:'center'}}>
+      <Calendar style={{width}} />
     </View>
   )
 }
