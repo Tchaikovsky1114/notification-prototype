@@ -3,12 +3,17 @@ import React from 'react'
 
 const ReportScreen = () => {
   return (
-    <View>
-      <Text>ReportScreen</Text>
+    <View style={styles.container}>
+      
     </View>
   )
 }
 
 export default ReportScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    backgroundColor:'#fff'
+  }
+})

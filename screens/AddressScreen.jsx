@@ -3,12 +3,19 @@ import React from 'react'
 
 const AddressScreen = () => {
   return (
-    <View>
-      <Text>AddressScreen</Text>
+    <View style={styles.container}>
+      <View style={{marginTop:48 }}>
+        
+      </View>
     </View>
   )
 }
 
 export default AddressScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    backgroundColor:'#fff'
+  }
+})

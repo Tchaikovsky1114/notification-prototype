@@ -7,6 +7,10 @@ import moment from 'moment';
 import { CheckBox } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 import { Touchable } from 'react-native';
+import 'moment/locale/ko'
+
+
+
 
 const DUMMY_EMAIL_DATA = [
   {

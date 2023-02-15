@@ -26,6 +26,7 @@ const RichTextEditor = () => {
   const [isShow,setIsShow] = useRecoilState(writeNoticeModalState);
   const [image,setImage] = useState('');
   const [totalImages,setTotalImages] = useState([]);
+
   const richTextHandler = (text) => {
     if(text) {
       setInputvalue(text)
@@ -35,10 +36,10 @@ const RichTextEditor = () => {
       setIsEmpty(true);
     }
   }
+
   const changeTitleHandler = (text) => {
     setTitle(text);
   }
-
 
   const submitNoticeHandler = () => {
     // fetchNotice(title,inputValue)
@@ -81,7 +82,6 @@ const RichTextEditor = () => {
       if(!result.canceled){
         const offset = 1000 * 60 * 60 * 9;
         const koreaTime = new Date((new Date()).getTime() + offset).toISOString().replace("T"," ").split('.')[0];
-        
         const storageRef = ref(storage,`images/${userInfo.name}/${koreaTime}`);
         await uploadImage(result.assets[0].uri,`images/${userInfo.name}/${koreaTime}`)
         .then(async () => {
@@ -89,7 +89,6 @@ const RichTextEditor = () => {
           return downloadUrl;
         })
         .then((url) => {
-          
           setImage(url);
         });
       }
