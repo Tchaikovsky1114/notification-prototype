@@ -3,6 +3,7 @@
     "name": "성원애드피아",
     "slug": "notification-prototype",
     "version": "1.0.0",
+    "backgroundColor":"#FFFFFF",
     "orientation": "portrait",
     "icon": "./assets/icon.jpg",
     "userInterfaceStyle": "light",

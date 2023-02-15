@@ -62,7 +62,7 @@ const SignIn = () => {
                 position: result.position,
                 pushToken: result.pushToken
               }));
-              navigation.navigate('Home');
+              navigation.navigate('Main');
             }
           })
         })

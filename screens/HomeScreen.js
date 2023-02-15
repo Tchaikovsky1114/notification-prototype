@@ -1,87 +1,45 @@
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { userInfoState } from '../recoil/userInfo'
+import NotoText from '../components/common/NotoText'
+import { Image } from 'react-native'
+import moment from 'moment'
 
-
-import useUserInfo from '../hooks/useUserInfo'
-import RichTextEditor from '../components/RichTextEditor'
-
-import { writeNoticeModalState } from '../recoil/writeNoticeModal'
-import { firestore } from '../firebaseConfig'
-import { collection, onSnapshot, orderBy, query } from '@firebase/firestore'
-import { Entypo } from '@expo/vector-icons';
-import NoticeCard from '../components/NoticeCard'
-
+import { useNavigation } from '@react-navigation/native'
+import SignIn from './SignIn'
 
 const HomeScreen = () => {
-  const { fetchVerifyingToken } = useUserInfo();
-  // const { getNotices,notices } = useNotice();
-  const [notices,setNotices] = useState([]);
-  const [isVerified,setIsVerified] = useState(false);
-  
-  const [isShowWriteNoticeModal,setIsShowWriteMoticeModal] = useRecoilState(writeNoticeModalState);
+  const userInfo = useRecoilValue(userInfoState);
 
-  const toggleWritePageHandler = () => {
-    setIsShowWriteMoticeModal((prev) => !prev);
-  }
-  
-  useEffect(() => {
-    if(isVerified) return;
-      fetchVerifyingToken();
-      setIsVerified(true)  
-  }, [])
-
-  useEffect(() => {
-    const q = query(collection(firestore, "Notice"),orderBy('createdAt','desc'));
-    
-    const unsubscription = onSnapshot(q, (snapshot) => {
-      const ntc = [];
-      snapshot.forEach((doc) => {
-        ntc.push(doc.data());
-      })
-      setNotices(ntc);
-    })
-    return () => unsubscription();
-  }, [])
   return (
-    <>
-    <RichTextEditor />
-      <FlatList
-        style={styles.container}
-        keyExtractor={(item) => item.id}
-        data={notices}
-        extraData={notices}
-        renderItem={({item}) => <NoticeCard 
-        department={item.department}
-        email={item.email}
-        title={item.title}
-        content={item.content}
-        position={item.position}
-        like={item.like}
-        reply={item.reply}
-        read={item.read}
-        createdAt={item.createdAt}
-        writer={item.writer}
-        id={item.id}
-      />}
-      />
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={toggleWritePageHandler}
-      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#120a57',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:10,right:10}}
-      >
-        <Entypo name="pencil" size={24} color="black" />
-      </TouchableOpacity>
-    </>
+    <View style={styles.container}>
+      {userInfo
+      ?<View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center',marginTop:24,borderWidth:1, borderColor:'#2d63e2',marginHorizontal:24,borderRadius:8,backgroundColor:'#2d63e2e0',paddingHorizontal:8,paddingVertical:40}}>
+        <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+            <Image style={{width:48,height:48,borderRadius:48}} source={{uri: 'https://gravatar.com/avatar/94d45dbdba988afacf30d916e7aaad69?s=200&d=mp&r=x'}} />
+          <View style={{marginHorizontal:24}}>
+            <NotoText style={{color:'#ccc',lineHeight:30,fontSize:20}}>(주) 성원애드피아</NotoText>
+            <NotoText style={{color:'#fff',lineHeight:30,fontSize:20}}>{userInfo.name} {userInfo.position}</NotoText>
+          </View>
+          
+        </View>
+        <View>
+        <NotoText style={{color:'#fff',lineHeight:24,fontSize:18}}>{moment().format('yyyy년')}</NotoText>
+        <NotoText style={{color:'#fff',lineHeight:24,fontSize:18}}>{moment().format('M월 DD일')}</NotoText>
+        </View>
+      </View>
+      : <SignIn />
+      }
+    </View>
   )
 }
-
-
 
 export default HomeScreen
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
+    flex:1,
     backgroundColor:'#fff'
   }
 })

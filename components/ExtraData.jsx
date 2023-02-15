@@ -50,7 +50,7 @@ const ExtraData = () => {
     }
     try {
       await fetchRegisterExtraUserData({...inputValue,pushToken});
-      navigation.navigate('Home')
+      navigation.navigate('Main')
     } catch (error) {
       console.error(error);
     }

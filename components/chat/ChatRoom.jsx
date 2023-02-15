@@ -4,35 +4,17 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { useState } from 'react'
 import { useLayoutEffect } from 'react'
 import { useRecoilValue } from 'recoil'
-import { userInfoState } from '../recoil/userInfo'
-import useChat from '../hooks/useChat'
+import { userInfoState } from '../../recoil/userInfo'
+import useChat from '../../hooks/useChat'
 import { doc, onSnapshot, orderBy, query } from 'firebase/firestore'
-import { firestore } from '../firebaseConfig'
+import { firestore } from '../../firebaseConfig'
 
-import NotoText from '../components/common/NotoText'
+import NotoText from '../common/NotoText'
 
 import { Feather } from '@expo/vector-icons';
 
-const quickReplies =  {
-  type: 'radio', // or 'checkbox',
-  keepIt: true,
-  values: [
-    {
-      title: '😋 Yes',
-      value: 'yes',
-    },
-    {
-      title: '📷 Yes, let me show you with a picture!',
-      value: 'yes_picture',
-    },
-    {
-      title: '😞 Nope. What?',
-      value: 'no',
-    },
-  ],
-}
 
-const ChatRoomScreen = () => {
+const ChatRoom = () => {
   const {params:{userInfo}} = useRoute();
   const navigation = useNavigation()
   const myInfo = useRecoilValue(userInfoState);
@@ -66,8 +48,17 @@ const ChatRoomScreen = () => {
   
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${userInfo.name}님과의 대화`
+      headerShown:true,
+      title: `${userInfo.name}님과 대화중입니다.`,
+      headerTitleStyle:{
+        color:'#a8a8a8',
+        fontSize:14
+      },
+      headerShadowVisible:false,
+      headerTitleAlign:'center',
+      headerBackVisible:false,
     })
+    
   }, [])
 
   // console.log(myInfo.email, userInfo.email);
@@ -99,4 +90,4 @@ const ChatRoomScreen = () => {
   )
 }
 
-export default ChatRoomScreen
+export default ChatRoom
