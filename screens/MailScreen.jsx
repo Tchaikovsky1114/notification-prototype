@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Mail from '../components/mail/Mail';
+
+const Stack = createNativeStackNavigator();
 
 const MailScreen = () => {
   return (
-    <View>
-      <Text>MailScreen</Text>
-    </View>
+    <Stack.Navigator screenOptions={{
+      headerTitleAlign:'center'
+    }}>
+      <Stack.Screen name='Mail' component={Mail} />
+    </Stack.Navigator>
   )
 }
 

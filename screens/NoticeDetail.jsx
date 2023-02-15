@@ -73,13 +73,14 @@ const NoticaDetail = () => {
   const [isMyLike, setIsMyLike] = useState(
     like.findIndex((item) => item === userInfo.email) >= 0
   );
+  
   const [replyValue, setReplyValue] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [likeCount, setLikeCount] = useState(like.length);
   const [feeds, setFeeds] = useState(reply);
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
-
+  
   const toggleLikeHandler = () => {
 
     setIsMyLike((prev) => !prev);
@@ -193,7 +194,6 @@ const NoticaDetail = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 width: 56,
-                height: 74,
                 borderWidth: 1,
                 borderColor: '#f41',
               }}
@@ -274,7 +274,7 @@ const NoticaDetail = () => {
                     borderWidth: 1,
                     borderColor: '#2d63e2',
                     borderRadius: 4,
-                    paddingHorizontal: 8,
+                    paddingHorizontal: width > 330 ? 8 : 4,
                     backgroundColor: '#fff',
                     justifyContent: 'center',
                     alignItems: 'center',

@@ -6,11 +6,8 @@ import { useLayoutEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/userInfo'
 import useChat from '../../hooks/useChat'
-import { doc, onSnapshot, orderBy, query } from 'firebase/firestore'
+import { doc, onSnapshot} from 'firebase/firestore'
 import { firestore } from '../../firebaseConfig'
-
-import NotoText from '../common/NotoText'
-
 import { Feather } from '@expo/vector-icons';
 
 
@@ -41,7 +38,6 @@ const ChatRoom = () => {
     const unsubscribe = onSnapshot(chatRef, (snapshot) => {
       if(!snapshot.data()[bug]) return;
         setMessages(snapshot.data()[bug]['com'].reverse())
-      
     })
     return () => unsubscribe();
   },[])
@@ -61,7 +57,6 @@ const ChatRoom = () => {
     
   }, [])
 
-  // console.log(myInfo.email, userInfo.email);
   return (
     <GiftedChat
       showAvatarForEveryMessage={true}

@@ -20,9 +20,13 @@ const AttendanceCalendar = () => {
   const [year,setYear] = useState(new Date().getFullYear());
   const [month,setMonth] = useState(new Date().getMonth());
   const [firstDay,setFirstDay] = useState();
+  const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState({});
+  const [totalWorkHourInMonth,setTotalWorkHourInMonth] = useState([]);
+  
   const { width } = useWindowDimensions();
   const {alert} = useAlert();
-  const [totalWorkHourInWeeks,setTotalWorkhourInWeeks] = useState({});
+  
+
   const generateMatrix = () => {
     let matrix = [];
     let maxDays = nDays[month];
@@ -47,7 +51,7 @@ const AttendanceCalendar = () => {
     // matrix[0] = weekDays
     return matrix
   };
-  const [totalWorkHourInMonth,setTotalWorkHourInMonth] = useState([]);
+  
 
   
   const matrix = generateMatrix();
