@@ -147,10 +147,10 @@ const AttendanceCalendar = () => {
       <View style={{justifyContent:'center',alignItems:'center',marginVertical:16}}>
       <NotoText style={{fontSize:24}}>{activeDate.getFullYear()}년 {months[activeDate.getMonth()]}</NotoText>
       </View>
-      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',paddingHorizontal:24}}>
+      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
         <TouchableOpacity
         onPress={workStartHandler}
-        style={{borderWidth:1,paddingVertical:4,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#f41',alignItems:'center',justifyContent:'center'}}
+        style={{borderWidth:1,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#f41',alignItems:'center',justifyContent:'center'}}
         activeOpacity={0.5}
         >
           <NotoText style={{color:'#f41',textAlign:'center',fontSize:16}}>출근하기</NotoText>
@@ -158,7 +158,7 @@ const AttendanceCalendar = () => {
         <View style={{width:16}} />
         <TouchableOpacity
         onPress={workEndHandler}
-        style={{borderWidth:1,paddingVertical:4,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
+        style={{borderWidth:1,width:80, height:48 ,paddingHorizontal:8,borderRadius:8,borderColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
         activeOpacity={0.5}
         >
           <NotoText style={{color:'#2d63e2',textAlign:'center',fontSize:16}}>퇴근하기</NotoText>
@@ -200,17 +200,17 @@ const AttendanceCalendar = () => {
       {
         matrix.map((row, rowIndex) => {
           let weeksIndex = rowIndex <= 6
-          ? (<View key={row + '' + rowIndex + activeDate.getMonth()}>
+          ? (<View key={row + '' + rowIndex + activeDate.getMonth()} >
               <View style={{marginVertical:16,borderBottomWidth:1,borderBottomColor:'#07205a',paddingBottom:4}}>
-              <NotoText style={{fontSize:22,color:'#07205a'}}>{rowIndex}주차</NotoText>
+              <NotoText style={{fontSize:width > 330 ? 22 : 18,color:'#07205a'}}>{rowIndex}주차</NotoText>
               </View>
               <View style={{flex:1,flexDirection:'row',width,justifyContent:'space-around',alignItems:'center',marginBottom:16}}>
                 <View style={{width:40,justifyContent:'center',alignItems:'center'}}>
-                <NotoText style={{textAlign:'center'}}>일자</NotoText>
+                <NotoText style={{textAlign:'center',fontSize:width > 330 ? 14 : 10}}>일자</NotoText>
                 </View>
-                <NotoText style={{flex:1,textAlign:'center'}}>업무 시작시간</NotoText>
-                <NotoText style={{flex:1,textAlign:'center'}}>업무 종료시간</NotoText>
-                <NotoText style={{flex:1,textAlign:'center'}}>총 근무시간</NotoText>
+                <NotoText style={{flex:1,textAlign:'center',fontSize:width > 330 ? 14 : 10}}>업무 시작시간</NotoText>
+                <NotoText style={{flex:1,textAlign:'center',fontSize:width > 330 ? 14 : 10}}>업무 종료시간</NotoText>
+                <NotoText style={{flex:1,textAlign:'center',fontSize:width > 330 ? 14 : 10}}>총 근무시간</NotoText>
               </View>
             </View>
             )
@@ -221,7 +221,7 @@ const AttendanceCalendar = () => {
               <View
               key={item + '' + colIndex + activeDate.getMonth() }
               style={{
-                justifyContent:'center',alignItems:'center',height:40,width: width - 16,paddingLeft:4,
+                justifyContent:'center',alignItems:'center',width: width - 24, paddingLeft:4,
                 borderWidth: item == activeDate.getDate() ? 1 : 0,
                 flexDirection:'row',
                 borderColor: '#21ee66'

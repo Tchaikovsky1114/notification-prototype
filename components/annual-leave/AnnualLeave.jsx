@@ -240,8 +240,8 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
       
       <View style={{flex:1,justifyContent:'center'}}>
         <View style={{alignItems:'center'}}>
-          <NotoText style={{fontSize:24,color:'#08035f'}}>연차 희망일을 선택해주세요.</NotoText>
-          <NotoText style={{fontSize:20,color:'#aaa'}}>복수 선택도 가능합니다.</NotoText>
+          <NotoText style={{fontSize:24,color:'#08035f',lineHeight:32}}>연차 희망일을 선택해주세요.</NotoText>
+          <NotoText style={{fontSize:16,color:'#aaa',lineHeight:24}}>복수 선택도 가능합니다.</NotoText>
         </View>
       <Calendar
       // // Initially visible month. Default = now
@@ -254,7 +254,8 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
       markedDates={markedDates}
       markingType="custom"
       onDayPress={(day) => {
-        if(annual.remainingLeave - extractAnnualLeave.length <= 0) return;
+        const extractDay = extractAnnualLeave.findIndex((leave) => leave === day.dateString);
+        if(annual.remainingLeave - extractAnnualLeave.length <= 0 || extractDay >= 0) return;
         markDateHandler(day);
         setExtractAnnualLeave((prev) => [...prev,day.dateString]);
       }}
@@ -266,7 +267,6 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
         textMonthFontFamily: 'Noto400',
         todayButtonFontFamily: 'Noto400',
         textDayHeaderFontFamily: 'Noto400',
-        
         textDayStyle: {
           fontSize:24,
           alignItems:'center',

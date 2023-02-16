@@ -72,7 +72,7 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <CustomDrawer {...props} /> }
       
       >
-      <Drawer.Screen name="Main" component={BottomNavigator} options={{}} />
+      <Drawer.Screen name="Overview" component={BottomNavigator} options={{title:'Home'}} />
       {userInfo &&
         <>
       <Drawer.Screen name="Mail" component={MailScreen} options={{title:'메일'}} />

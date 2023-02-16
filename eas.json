@@ -4,10 +4,14 @@
       "developmentClient": true
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        
+        "image": "default"
+      }
     },
     "production": {
-      "extends":"development"
+      
     }
   }
 }

@@ -74,11 +74,11 @@ const SignIn = () => {
     }
   }, [response]);
   
-
+  
 
   return (
     <View style={styles.container}>
-      {!userInfo ? (
+      {!userInfo && (
         <>
         <Modal visible={isLoading} transparent={true} animationType="fade" >
             <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.2)',flex:1,justifyContent:'center',alignItems:'center'}}>
@@ -114,9 +114,8 @@ const SignIn = () => {
           </Pressable>
         </View>
         </>
-      ) : (
-        <ExtraData />
-      )}
+      ) 
+      }
     </View>
   );
 };

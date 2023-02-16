@@ -1,13 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Alert } from 'react-native';
 import { useEffect, useRef,useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { pushTokenState } from './recoil/pushtoken';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DrawerNavigator from './navigator/DrawerNavigator';
+import { userInfoState } from './recoil/userInfo';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -46,22 +45,25 @@ const registerForPushNotification = async (userId) => {
   }
   return token;
 };
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+
 
 const Main = () => {
   const [expoPushToken, setExpoPushToken] = useRecoilState(pushTokenState);
   const [notification, setNotification] = useState();
   const notificationListener = useRef();
   const responseListener = useRef();
+  
   const navigationRef = useRef(null);
 
+
+  
   useEffect(() => {
     registerForPushNotification().then((token) => {
       setExpoPushToken(token);
       if (token) {
       }
     });
+
     console.log('expoPushToken',expoPushToken);
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {

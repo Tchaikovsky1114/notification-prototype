@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, useWindowDimensions } from 'react-native'
 import React from 'react'
 
 
@@ -21,6 +21,8 @@ const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
   const userInfo = useRecoilValue(userInfoState);
+  const { width } = useWindowDimensions();
+  
   return (
     <Tab.Navigator
       initialRouteName='Main'
@@ -33,7 +35,9 @@ const BottomNavigator = () => {
         },null
       ],
         tabBarLabelStyle:{
-          fontSize:14,
+          fontSize:width > 330 ? 14 : 10,
+          fontFamily:'Noto400',
+          lineHeight:20,
         },
         tabBarActiveTintColor: '#2d63e2',
         tabBarInactiveTintColor:'#120a57',
@@ -54,32 +58,32 @@ const BottomNavigator = () => {
           }
           if(route.name === 'Main') {
             return focused
-            ? <AntDesign name="home" size={24} color="#2d63e2" />
-            : <AntDesign name="home" size={24} color="black" />
+            ? <AntDesign name="home" size={width > 330 ? 24 : 18} color="#2d63e2" />
+            : <AntDesign name="home" size={width > 330 ? 24 : 18} color="black" />
           }
 
           if(route.name === 'Notice') {
             return focused
-            ? <AntDesign name="notification" size={24} color="#2d63e2" />
-            : <AntDesign name="notification" size={24} color="#120a57" />
+            ? <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#2d63e2" />
+            : <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#120a57" />
           }
           
           if(route.name === 'AnnualLeave') {
             return focused
-            ? <FontAwesome5 name="umbrella-beach" size={24} color="#2d63e2" />
-            : <FontAwesome5 name="umbrella-beach" size={24} color="#120a57" />
+            ? <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#2d63e2" />
+            : <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#120a57" />
           }
 
           if(route.name === 'Chat') {
             return focused
-            ? <Entypo name="chat" size={24} color="#2d63e2" />
-            : <Entypo name="chat" size={24} color="black" />
+            ? <Entypo name="chat" size={width > 330 ? 24 : 18} color="#2d63e2" />
+            : <Entypo name="chat" size={width > 330 ? 24 : 18} color="black" />
           }
 
           if(route.name === 'Attendance') {
             return focused
-            ? <MaterialCommunityIcons name="chair-school" size={24} color="#2d63e2" />
-            : <MaterialCommunityIcons name="chair-school" size={24} color="#120a57" />
+            ? <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#2d63e2" />
+            : <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#120a57" />
           }
         }
       })

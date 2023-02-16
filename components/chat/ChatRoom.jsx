@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { GiftedChat, Send } from 'react-native-gifted-chat'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { useState } from 'react'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect,useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/userInfo'
 import useChat from '../../hooks/useChat'
 import { doc, onSnapshot} from 'firebase/firestore'
 import { firestore } from '../../firebaseConfig'
 import { Feather } from '@expo/vector-icons';
+import ContactModal from '../ContactModal'
 
 
 const ChatRoom = () => {
@@ -18,10 +18,7 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState();
   
   const { fetchChat, createChatRoom } = useChat();
-  // 컬렉션 Chat에 내 이메일, 상대방 email로 된 Doc 생성
-  // 내 Field에는 상대방 email 상대방 Field에는 내 email 생성
-  // 메세지를 보낼때마다 두 값 모두 update
-
+  const [isContactModalShow, setIsContactModalShow] = useState(false);
   const onSend = (messages = []) => {
     const { _id, createdAt, text, user } = messages[0];    
     fetchChat(userInfo.email , myInfo.email,{ _id, createdAt, text, user })
@@ -58,6 +55,15 @@ const ChatRoom = () => {
   }, [])
 
   return (
+  <>
+  <ContactModal
+    isContactModalShow={isContactModalShow}
+    email={userInfo.email}
+    name={userInfo.name}
+    position={userInfo.position}
+    setIsContactModalShow={setIsContactModalShow}
+    />
+    
     <GiftedChat
       showAvatarForEveryMessage={true}
       messages={messages}
@@ -69,8 +75,8 @@ const ChatRoom = () => {
       }}
     placeholder="보낼 메시지를 작성해주세요."
     messagesContainerStyle={{backgroundColor:'#fff'}}
-    onPress={() => console.log('hello')}
-    onPressAvatar={() => console.log('hello')}
+    onPress={() => setIsContactModalShow(true)}
+    onPressAvatar={() => setIsContactModalShow(true)}
     // onQuickReply={quickReply =>}
     renderSend={(props) => (
       <Send
@@ -82,6 +88,7 @@ const ChatRoom = () => {
       </Send>
     )}
     />
+  </>
   )
 }
 

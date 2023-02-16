@@ -1,11 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Report from '../components/report/Report';
+
+const Stack = createNativeStackNavigator();
 
 const ReportScreen = () => {
   return (
-    <View style={styles.container}>
-      
-    </View>
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="Report" component={Report} />
+    </Stack.Navigator>
   )
 }
 

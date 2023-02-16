@@ -64,7 +64,6 @@ const RichTextEditor = () => {
       console.log('uploaded a blob or file!');
     })
     // const storageRef = ref(storage,`${imageName}`);
-    
   }
 
   const addImageHandler = async () => {
@@ -118,6 +117,7 @@ const RichTextEditor = () => {
    editor={richText}
    selectedIconTint="#2d63e2"
    iconTint="#f6f9ff"
+   
    actions={[
      actions.undo,
      actions.redo,
@@ -132,6 +132,7 @@ const RichTextEditor = () => {
    ]}
    onPressAddImage={addImageHandler}
    style={styles.richTextToolbarStyle}
+   
   />
     <RichEditor
       ref={richText}
