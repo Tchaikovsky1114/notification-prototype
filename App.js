@@ -4,10 +4,11 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { useFonts } from 'expo-font';
 import { useCallback } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 
 
@@ -31,12 +32,14 @@ export default function App() {
   }
 
   return (
+    
     <RecoilRoot>
       <RootSiblingParent>
-        <View style={{flex:1}} onLayout={onLayoutRootView}>
-        <Main onLayoutRootView={onLayoutRootView} />      
-        </View>
-      </RootSiblingParent>
-    </RecoilRoot>
+         <View style={{flex:1}} onLayout={onLayoutRootView}>
+          <StatusBar style='inverted'  />
+           <Main onLayoutRootView={onLayoutRootView} />      
+         </View>
+       </RootSiblingParent>
+     </RecoilRoot>
   );
 }

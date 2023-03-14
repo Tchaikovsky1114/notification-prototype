@@ -64,9 +64,9 @@ const Notice = () => {
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={toggleWritePageHandler}
-      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#120a57',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:10,right:10}}
+      style={{width:56,borderRadius:52,borderWidth:1,borderColor:'#fff',justifyContent:'center',alignItems:'center',height:56,position:'absolute',bottom:10,right:10}}
       >
-        <Entypo name="pencil" size={24} color="black" />
+        <Entypo name="pencil" size={24} color="#fff" />
       </TouchableOpacity>
     </>
   )
@@ -78,6 +78,6 @@ export default Notice
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor:'#fff'
+    backgroundColor:'#000'
   }
 })

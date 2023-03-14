@@ -110,12 +110,12 @@ const RichTextEditor = () => {
           value={title}
           onChangeText={changeTitleHandler}
           placeholder="공지사항 제목을 입력해주세요."
-          style={{position:'relative',fontSize:20,paddingHorizontal:8,borderBottomWidth:1, borderBottomColor:'#2d63e2',height:53}}
+          style={{position:'relative',fontSize:20,paddingHorizontal:8,borderBottomWidth:1, borderBottomColor:'#0cdae0',height:53}}
         />
       </View>
     <RichToolbar
    editor={richText}
-   selectedIconTint="#2d63e2"
+   selectedIconTint="#0cdae0"
    iconTint="#f6f9ff"
    
    actions={[
@@ -147,7 +147,7 @@ const RichTextEditor = () => {
     </KeyboardAvoidingView>
     <Pressable
     onPress={submitNoticeHandler}
-    style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
+    style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#0cdae0',alignItems:'center',justifyContent:'center'}}
     >
       <NotoText style={{fontSize:24,textAlign:'center',color:'#fff'}}>게시하기</NotoText>
     </Pressable>
@@ -168,15 +168,15 @@ const styles = StyleSheet.create({
 
   headerStyle: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "#312921",
+    fontWeight: "Noto600",
+    color: "#fff",
     marginBottom: 10,
   },
 
   htmlBoxStyle: {
     height: 200,
     width: 330,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
     borderRadius: 10,
     padding: 20,
     marginBottom: 10,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
 
   textButtonStyle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#312921",
+    fontWeight: "Noto600",
+    color: "#fff",
   },
 });

@@ -17,12 +17,12 @@ const HomeScreen = () => {
       {!userInfo
       ? <SignIn />
       : (userInfo && userInfo.position)
-      ? <View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center',marginTop:24,borderWidth:1, borderColor:'#2d63e2',marginHorizontal:width > 330 ? 24 : 16,borderRadius:8,backgroundColor:'#2d63e2e0',paddingHorizontal:8,paddingVertical:width > 330 ? 40 : 24}}>
+      ? <View style={{flexDirection:'row',justifyContent:'space-around', alignItems:'center',marginTop:24,borderWidth:1, borderColor:'#0cdae0',marginHorizontal:width > 330 ? 24 : 16,borderRadius:16,marginTop:64,backgroundColor:'#0cdae0e0',paddingHorizontal:8,paddingVertical:width > 330 ? 40 : 24}}>
       <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
           <Image style={{width:width > 330 ? 48 : 40,height: width > 330 ? 48 : 40, borderRadius:40}} source={{uri: 'https://gravatar.com/avatar/94d45dbdba988afacf30d916e7aaad69?s=200&d=mp&r=x'}} />
         <View style={{marginHorizontal:24}}>
-          <NotoText style={{color:'#ccc',lineHeight:width > 330 ? 30 : 20,fontSize: width > 330 ? 20 : 14}}>(주) 성원애드피아</NotoText>
-          <NotoText style={{color:'#fff',lineHeight:width > 330 ? 30: 20,fontSize: width > 330 ? 20 : 14}}>{userInfo.name} {userInfo.position}</NotoText>
+          <NotoText style={{color:'#fff',lineHeight:width > 330 ? 30 : 20,fontSize: width > 330 ? 18 : 14}}>(주) 성원애드피아</NotoText>
+          <NotoText style={{color:'#fff',lineHeight:width > 330 ? 30: 20,fontSize: width > 330 ? 18 : 14}}>{userInfo.name} {userInfo.position}</NotoText>
         </View>
       </View>
       <View>
@@ -41,6 +41,6 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:'#fff'
+    backgroundColor:'#000'
   }
 })

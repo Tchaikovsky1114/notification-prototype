@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { GiftedChat, Send } from 'react-native-gifted-chat'
+import { Feather } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useLayoutEffect,useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -7,7 +8,7 @@ import { userInfoState } from '../../recoil/userInfo'
 import useChat from '../../hooks/useChat'
 import { doc, onSnapshot} from 'firebase/firestore'
 import { firestore } from '../../firebaseConfig'
-import { Feather } from '@expo/vector-icons';
+
 import ContactModal from '../ContactModal'
 
 
@@ -41,7 +42,10 @@ const ChatRoom = () => {
   
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown:true,
+      headerStyle:{
+        backgroundColor:'#f4511e'
+      },
+      
       title: `${userInfo.name}님과 대화중입니다.`,
       headerTitleStyle:{
         color:'#a8a8a8',
@@ -50,6 +54,7 @@ const ChatRoom = () => {
       headerShadowVisible:false,
       headerTitleAlign:'center',
       headerBackVisible:false,
+      headerShown:false,
     })
     
   }, [])
@@ -74,7 +79,7 @@ const ChatRoom = () => {
         name: myInfo.name,
       }}
     placeholder="보낼 메시지를 작성해주세요."
-    messagesContainerStyle={{backgroundColor:'#fff'}}
+    messagesContainerStyle={{backgroundColor:'#000'}}
     onPress={() => setIsContactModalShow(true)}
     onPressAvatar={() => setIsContactModalShow(true)}
     // onQuickReply={quickReply =>}
@@ -84,7 +89,7 @@ const ChatRoom = () => {
         containerStyle={{justifyContent:'center', alignItems:'center',paddingHorizontal:12,marginRight:8}}
 
         >
-        <Feather name="send" size={24} color="#2d63e2" />
+        <Feather name="send" size={24} color="#0cdae0" />
       </Send>
     )}
     />

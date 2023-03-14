@@ -6,15 +6,17 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import HomeScreen from '../screens/HomeScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/userInfo';
 
+
+import HomeScreen from '../screens/HomeScreen';
 import AnnualLeaveScreen from '../screens/AnnualLeaveScreen'; 
 import ChatScreen from '../screens/ChatScreen';
 import AttendanceScreen from '../screens/AttendanceScreen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NoticeScreen from '../screens/NoticeScreen';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../recoil/userInfo';
+
 import NotoText from '../components/common/NotoText';
 
 const Tab = createBottomTabNavigator();
@@ -39,8 +41,9 @@ const BottomNavigator = () => {
           fontFamily:'Noto400',
           lineHeight:20,
         },
-        tabBarActiveTintColor: '#2d63e2',
-        tabBarInactiveTintColor:'#120a57',
+        tabBarActiveTintColor: '#0cdae0',
+        tabBarInactiveTintColor:'#fff',
+        headerShadowVisible:false,
         tabBarItemStyle: {
           alignItems: 'center',
           justifyContent: 'center',
@@ -48,42 +51,45 @@ const BottomNavigator = () => {
           paddingBottom: 15,
           height: 70,
         },
+        tabBarActiveBackgroundColor:'#000',
+        tabBarInactiveBackgroundColor:'#000',
+        
         // tabBarIconStyle: {
         //   alignContent: 'center',
         //   justifyContent: 'center',
         // },
         tabBarIcon: ({focused}) => {
           if(route.name === 'NotLogged'){
-            return <AntDesign name="lock" size={32} color="#2d63e2" />
+            return <AntDesign name="lock" size={32} color="#0cdae0" />
           }
           if(route.name === 'Main') {
             return focused
-            ? <AntDesign name="home" size={width > 330 ? 24 : 18} color="#2d63e2" />
-            : <AntDesign name="home" size={width > 330 ? 24 : 18} color="black" />
+            ? <AntDesign name="home" size={width > 330 ? 24 : 18} color="#0cdae0" />
+            : <AntDesign name="home" size={width > 330 ? 24 : 18} color="#fff" />
           }
 
           if(route.name === 'Notice') {
             return focused
-            ? <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#2d63e2" />
-            : <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#120a57" />
+            ? <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#0cdae0" />
+            : <AntDesign name="notification" size={width > 330 ? 24 : 18} color="#fff" />
           }
           
           if(route.name === 'AnnualLeave') {
             return focused
-            ? <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#2d63e2" />
-            : <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#120a57" />
+            ? <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#0cdae0" />
+            : <FontAwesome5 name="umbrella-beach" size={width > 330 ? 24 : 18} color="#fff" />
           }
 
           if(route.name === 'Chat') {
             return focused
-            ? <Entypo name="chat" size={width > 330 ? 24 : 18} color="#2d63e2" />
-            : <Entypo name="chat" size={width > 330 ? 24 : 18} color="black" />
+            ? <Entypo name="chat" size={width > 330 ? 24 : 18} color="#0cdae0" />
+            : <Entypo name="chat" size={width > 330 ? 24 : 18} color="#fff" />
           }
 
           if(route.name === 'Attendance') {
             return focused
-            ? <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#2d63e2" />
-            : <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#120a57" />
+            ? <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#0cdae0" />
+            : <MaterialCommunityIcons name="chair-school" size={width > 330 ? 24 : 18} color="#fff" />
           }
         }
       })
@@ -150,7 +156,7 @@ const BottomNavigator = () => {
         title:'출/퇴근 관리',
         headerTitleAlign:'center',
       }}
-      />
+      /> 
       </>
       :
       <Tab.Screen

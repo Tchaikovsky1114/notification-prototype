@@ -38,7 +38,7 @@ const fetchRegisterExtraUserData = async (userInfo) => {
     
     return data;
   } catch (error) {
-    console.error(error.error);
+    console.error(error);
   }
 }
 

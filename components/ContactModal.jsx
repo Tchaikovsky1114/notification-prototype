@@ -15,7 +15,7 @@ const ContactModal = ({isContactModalShow,setIsContactModalShow,name,position,em
       shadow: true,
       animation: true,
       hideOnPress: true,
-      shadowColor:'#000',
+      shadowcolor:'#fff',
       delay: 0,
   });
     setTimeout(() => {
@@ -60,12 +60,12 @@ const ContactModal = ({isContactModalShow,setIsContactModalShow,name,position,em
       style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0,0,0,0.2)'}}>
       
       <TouchableWithoutFeedback>
-      <View style={{backgroundColor:'#fff',padding:24,borderRadius:4,justifyContent:'center',alignItems:'center'}}>
+      <View style={{backgroundColor:'#000',padding:24,borderRadius:4,justifyContent:'center',alignItems:'center'}}>
         <View style={{ paddingBottom:2,borderBottomWidth:1,marginBottom:16}}>
-        <NotoText style={{fontSize:24}}>{name} {position}</NotoText>
+        <NotoText style={{fontSize:24,color:'#fff'}}>{name} {position}</NotoText>
         </View>
         
-        <NotoText style={{fontSize:18}}>{email}</NotoText>
+        <NotoText style={{fontSize:18,color:'#fff'}}>{email}</NotoText>
         <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:16}}>
         <TouchableOpacity style={{marginRight:48}}
           onPress={addContactHandler}
@@ -77,7 +77,7 @@ const ContactModal = ({isContactModalShow,setIsContactModalShow,name,position,em
           onPress={callPhoneHandler}
           activeOpacity={0.3}
           >
-            <Feather name="phone-call" size={24} color="#2d63e2" />
+            <Feather name="phone-call" size={24} color="#0cdae0" />
           </TouchableOpacity>
           <TouchableOpacity
           onPress={sendSmsHandler}

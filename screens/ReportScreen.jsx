@@ -6,9 +6,12 @@ import Report from '../components/report/Report';
 const Stack = createNativeStackNavigator();
 
 const ReportScreen = () => {
-  return (
+  
+  return ( 
+    
+    
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="Report" component={Report} />
+       <Stack.Screen name="ReportList" component={Report} />
     </Stack.Navigator>
   )
 }
@@ -18,6 +21,6 @@ export default ReportScreen
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:'#fff'
+    backgroundColor:'#000'
   }
 })

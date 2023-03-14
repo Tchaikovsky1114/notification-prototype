@@ -3,14 +3,15 @@
     "name": "성원애드피아",
     "slug": "notification-prototype",
     "version": "1.0.1",
-    "backgroundColor": "#FFFFFF",
+    
+    "backgroundColor": "#000",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
@@ -32,7 +33,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#000"
       },
       "permissions": [
         "android.permission.NOTIFICATIONS",
@@ -40,15 +41,14 @@
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR",
         "android.permission.RECORD_AUDIO"
-      ],
-      "useNextNotificationsApi": true
+      ]
     },
     "plugins": [
       [
         "expo-notifications",
         {
           "icon": "./assets/swadpia.png",
-          "color": "#ffffff"
+          "color": "#000fff"
         }
       ],
       [
@@ -58,7 +58,6 @@
         }
       ]
     ],
-    "googleServicesFile": "./google-services.json",
     "extra": {
       "eas": {
         "projectId": "ebc8b7f7-8735-49b9-bd32-626d3629b62f"

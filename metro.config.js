@@ -1,6 +1,10 @@
-const { getDefaultConfig } = require('@expo/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
 
-const defaultConfig = getDefaultConfig(__dirname);
-defaultConfig.resolver.assetExts.push('cjs');
+const config = getDefaultConfig(__dirname);
 
-module.exports = defaultConfig;
+config.transformer.minifierPath = 'metro-minify-terser';
+config.transformer.minifierConfig = {
+  // Terser options...
+};
+
+module.exports = config;
