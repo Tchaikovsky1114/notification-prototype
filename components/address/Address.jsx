@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import NotoText from '../common/NotoText'
 
@@ -28,7 +28,7 @@ const obj = [{
 const Address = () => {
   
   return (
-    <ScrollView style={{backgroundColor:'#fff'}}>
+    <ScrollView style={{backgroundColor:'#000'}}>
       <View style={{marginTop:48,paddingHorizontal:24,}}>
       <NotoText style={{fontSize:24}}>주소록</NotoText>
       

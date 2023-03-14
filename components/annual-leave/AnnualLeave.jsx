@@ -1,4 +1,4 @@
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View,Pressable } from 'react-native'
 import React from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { useNavigation } from '@react-navigation/native';
 import { userInfoState } from '../../recoil/userInfo';
 import { LocaleConfig,Calendar } from 'react-native-calendars';
-import { Pressable } from 'react-native';
+
 import NotoText from '../../components/common/NotoText';
 import { ScrollView } from 'react-native';
 
@@ -240,7 +240,7 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
       
       <View style={{flex:1,justifyContent:'center'}}>
         <View style={{alignItems:'center'}}>
-          <NotoText style={{fontSize:24,color:'#08035f',lineHeight:32}}>연차 희망일을 선택해주세요.</NotoText>
+          <NotoText style={{fontSize:24,color:'#fff',lineHeight:32}}>연차 희망일을 선택해주세요.</NotoText>
           <NotoText style={{fontSize:16,color:'#aaa',lineHeight:24}}>복수 선택도 가능합니다.</NotoText>
         </View>
       <Calendar
@@ -274,18 +274,18 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
           lineHeight:28,
         },
         weekVerticalMargin: 16,
-        selectedDayBackgroundColor:'#2d63e2',
-        selectedDayTextColor:'#fff',
+        selectedDayBackgroundColor:'#0cdae0',
+        selectedDayTextcolor:'#fff',
         selectedDotColor:'#f41',
         'stylesheet.calendar.header': {
           dayTextAtIndex0: {
             color:'#f41'
           },
           dayHeader:{
-            color:'#000'
+            color:'#fff'
           },
           dayTextAtIndex6: {
-            color:'#2d63e2'
+            color:'#0cdae0'
           }
         }
       }}
@@ -336,9 +336,9 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
     </Pressable>
     <Pressable
       onPress={() => {}}
-      style={{paddingHorizontal:24,paddingVertical:16,borderRadius:4,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#2d63e2'}}
+      style={{paddingHorizontal:24,paddingVertical:16,borderRadius:4,justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'#0cdae0'}}
     >
-      <NotoText style={{color:'#2d63e2',fontSize:18}}>연차 상신하기</NotoText>
+      <NotoText style={{color:'#0cdae0',fontSize:18}}>연차 상신하기</NotoText>
     </Pressable>
     </View>
     </View>
@@ -355,23 +355,23 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
       />}
     {annual
     ? 
-    <ScrollView style={{backgroundColor:'#fff',paddingHorizontal:8}}>
-      <View style={{borderWidth:1, borderColor:'#2d63e2',padding:16}}>
-        <NotoText style={{fontSize:18}}>{userInfo.name}님의 연차와 관련된 정보입니다.</NotoText>
-        <NotoText style={{fontSize:20}}>입사일자: <NotoText style={{color:'#2d63e2'}}>{annual.joinDate.split('T')[0].split('-')[0]}년 {annual.joinDate.split('T')[0].split('-')[1]}월 {annual.joinDate.split('T')[0].split('-')[2]}일</NotoText></NotoText>
+    <ScrollView style={{backgroundColor:'#000',paddingHorizontal:8}}>
+      <View style={{borderWidth:1, borderColor:'#0cdae0',padding:16,marginTop:48}}>
+        <NotoText style={{fontSize:18,color:'#fff'}}>{userInfo.name}님의 연차와 관련된 정보입니다.</NotoText>
+        <NotoText style={{fontSize:20,color:'#fff'}}>입사일자: <NotoText style={{color:'#0cdae0'}}>{annual.joinDate.split('T')[0].split('-')[0]}년 {annual.joinDate.split('T')[0].split('-')[1]}월 {annual.joinDate.split('T')[0].split('-')[2]}일</NotoText></NotoText>
       </View>
     <View style={{marginVertical:24,paddingBottom:8,borderBottomWidth:1, borderBottomColor:'#f41',justifyContent:'flex-start',alignItems:'flex-start'}}>
-      { now.diff(annual.joinDate,'years') > 1 && <NotoText style={{fontSize:24}}>이번년도 지급 연차 <NotoText style={{color:'#f91'}}>{annual.annualLeave}</NotoText> 개</NotoText>}
-      { now.diff(annual.joinDate,'years') < 2 && <NotoText style={{fontSize:24}}>이번년도 지급 월차 <NotoText style={{color:'#f91'}}>{annual.monthlyLeave}</NotoText> 개</NotoText> }
+      { now.diff(annual.joinDate,'years') > 1 && <NotoText style={{fontSize:24,color:'#fff'}}>이번년도 지급 연차 <NotoText style={{color:'#f91'}}>{annual.annualLeave}</NotoText> 개</NotoText>}
+      { now.diff(annual.joinDate,'years') < 2 && <NotoText style={{fontSize:24,color:'#fff'}}>이번년도 지급 월차 <NotoText style={{color:'#f91'}}>{annual.monthlyLeave}</NotoText> 개</NotoText> }
     </View>
     <View>
-      <NotoText style={{fontSize:24}}>이번년도 사용 휴가: <NotoText style={{color:'#2d63e2'}}>{annual.usedLeave}</NotoText></NotoText>
-      <NotoText style={{fontSize:24}}>이번년도 남은 휴가: <NotoText style={{color:'#f41'}}>{annual.remainingLeave}</NotoText></NotoText>
+      <NotoText style={{fontSize:24,color:'#fff'}}>이번년도 사용 휴가: <NotoText style={{color:'#0cdae0'}}>{annual.usedLeave}</NotoText></NotoText>
+      <NotoText style={{fontSize:24,color:'#fff'}}>이번년도 남은 휴가: <NotoText style={{color:'#f41'}}>{annual.remainingLeave}</NotoText></NotoText>
     </View>
-      <View style={{marginTop:72,justifyContent:'center',alignItems:'center'}}>
+      <View style={{marginTop:32,justifyContent:'center',alignItems:'center'}}>
         <TouchableOpacity
         onPress={showVacationModalHandler}
-        style={{height:144,backgroundColor:'#2d63e2',width:'80%',justifyContent:'center',alignItems:'center',borderRadius:8}}>
+        style={{height:144,backgroundColor:'#0cdae0',width:'80%',justifyContent:'center',alignItems:'center',borderRadius:8}}>
           <NotoText style={{color:'#fff',fontSize:28,lineHeight:32}}>휴가 사용</NotoText>
         </TouchableOpacity>
       </View>
@@ -385,7 +385,7 @@ console.log('=== 날짜를 선택한 연차일 ===',extractAnnualLeave);
         alignItems:'center',
         padding:16,
         borderRadius:16,
-        backgroundColor:'#2d63e2'
+        backgroundColor:'#0cdae0'
         }}>
         <NotoText style={{fontSize:24,color:'#fff'}}>입사년월을 선택해주세요.</NotoText>
         <View style={{height:20}} />
@@ -401,7 +401,7 @@ export default AnnualLeave
 const styles = StyleSheet.create({
   container : {
     flex:1,
-    backgroundColor:'#fff',
+    backgroundColor:'#000',
     justifyContent:'center',
     alignItems:'center'
   }

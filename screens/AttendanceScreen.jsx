@@ -14,6 +14,6 @@ export default AttendanceScreen
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:'#fff'
+    backgroundColor:'#000'
   }
 })

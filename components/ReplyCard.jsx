@@ -50,7 +50,7 @@ const ReplyCard = ({createdAt,department,email,id,name,position,reply}) => {
           <NotoText>
             {name} {position}
           </NotoText>
-          <NotoText style={{alignSelf:'flex-end', textAlign: 'right', color: '#2d63e2' }}>
+          <NotoText style={{alignSelf:'flex-end', textAlign: 'right', color: '#0cdae0' }}>
             {department}부서
           </NotoText>
         </TouchableOpacity>

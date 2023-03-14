@@ -10,7 +10,7 @@ const MailScreen = () => {
     <Stack.Navigator screenOptions={{
       headerTitleAlign:'center'
     }}>
-      <Stack.Screen name='Mail' component={Mail} />
+      <Stack.Screen name='MailList' component={Mail} />
     </Stack.Navigator>
   )
 }

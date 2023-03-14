@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 const AddressScreen = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="Address" component={Address} />
+      <Stack.Screen name="AddressList" component={Address} />
     </Stack.Navigator>
   )
 }

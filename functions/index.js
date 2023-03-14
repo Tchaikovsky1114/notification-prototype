@@ -97,9 +97,9 @@ exports.noticeUserNotification = regionalFunctions.firestore
   let tickets = [];
 
   const users = await admin.firestore().collection('User').get();
-  users.forEach((doc) => {
-    const token = doc.data().pushToken;
-    if(token) {
+  users.forEach((user) => {
+    
+    const token = user.data().pushToken;
       messages.push({
         to: token,
         sound: 'default',
@@ -108,7 +108,6 @@ exports.noticeUserNotification = regionalFunctions.firestore
         body: `[${notice.title}]를 확인해주세요`,
         channelId:'default'
       })
-    }
   })
   let chunks = expo.chunkPushNotifications(messages);
   for(let chunk of chunks) {
@@ -116,7 +115,7 @@ exports.noticeUserNotification = regionalFunctions.firestore
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
         tickets.push(...ticketChunk);
     } catch (error) {
-      return null;
+      throw new Error(error);
     }
   }
 })

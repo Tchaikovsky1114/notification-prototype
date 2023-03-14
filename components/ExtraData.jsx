@@ -1,13 +1,14 @@
 import {
   ActivityIndicator,
-  Alert,
+  
   KeyboardAvoidingView,
-  Pressable,
+  
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
+  ScrollView
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import RegisterInput from './RegisterInput';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userInfo';
-import { ScrollView } from 'react-native-gesture-handler';
+
 import useUserInfo from '../hooks/useUserInfo';
 import { pushTokenState } from '../recoil/pushtoken';
 
@@ -26,6 +27,7 @@ const ExtraData = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const { fetchRegisterExtraUserData } = useUserInfo();
   const [pushToken,setPushToken] = useRecoilState(pushTokenState);
+  const [isLoading,setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     department: '',
     position: '',
@@ -45,14 +47,18 @@ const ExtraData = () => {
   };
   
   const registerUserHandler = async () => {
+    setIsLoading(true);
     for(let value in inputValue) {
       if(!value) return;
     }
     try {
       await fetchRegisterExtraUserData({...inputValue,pushToken});
-      navigation.navigate('Main')
+      
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
+      
     }
   }
 
@@ -66,19 +72,12 @@ const ExtraData = () => {
     }));
   }, [userInfo]);
 
-  
-
-
-  useEffect(() => {
-    
-  } ,[])
-  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {userInfo ? (
-        <KeyboardAvoidingView style={{ flex: 1, padding: 24, position: 'relative' }}>
+        <KeyboardAvoidingView style={{ flex: 1, padding: 24, position: 'relative',marginTop:24 }}>
           <View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold',color:'#fff' }}>
               추가정보 입력
             </Text>
           </View>
@@ -104,6 +103,7 @@ const ExtraData = () => {
               name="name"
               placeholder="성함"
               title="성함"
+              
             />
             <RegisterInput
               onChange={inputChangeHandler}
@@ -123,11 +123,12 @@ const ExtraData = () => {
               left:0,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#2d63e2',
+              backgroundColor: '#0cdae0',
               height: 52,
             }}
           >
-        <Text style={{ fontSize: 22, color: '#fff' }}>가입 완료하기</Text>
+        {!isLoading && <Text style={{ fontSize: 22, color: '#000' }}>가입 완료하기</Text>}
+        {isLoading && <ActivityIndicator size="large" />}
       </TouchableOpacity>
         </KeyboardAvoidingView>
       ) : (
@@ -137,13 +138,6 @@ const ExtraData = () => {
           <ActivityIndicator size="large" />
         </View>
       )}
-
-      {/* <Pressable
-        style={{ width: 100, height: 100 }}
-        onPress={() => navigation.navigate('SignIn')}
-      >
-        <Text style={{ fontSize: 24 }}>go signin</Text>
-      </Pressable> */}
       
     </ScrollView>
   );
@@ -154,6 +148,6 @@ export default ExtraData;
 const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
 });

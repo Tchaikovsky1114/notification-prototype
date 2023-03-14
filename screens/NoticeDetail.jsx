@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
   Dimensions,
   useWindowDimensions,
+  ScrollView
 } from 'react-native';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Constants from 'expo-constants';
 import useNotice from '../hooks/useNotice';
 import { userInfoState } from '../recoil/userInfo';
@@ -19,7 +20,6 @@ import ReplyCard from '../components/ReplyCard';
 import NotoText from '../components/common/NotoText';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 import {  doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '../firebaseConfig';
 import useSeparateTime from '../hooks/useSeparateTime';
@@ -35,9 +35,9 @@ const { width: deviceWidth } = Dimensions.get('window');
 
 const tagStyles = {
   body: {
-    color: '#061457',
+    color: '#fff',
     width: deviceWidth > 330 ? 360 : 300,
-    padding: 32,
+    padding: 8,
     marginTop: 16,
     marginBottom: 16,
     fontSize: 14,
@@ -51,22 +51,8 @@ const tagStyles = {
     fontSize: 22,
   },
 };
-const NoticaDetail = () => {
-  const {
-    params: {
-      id,
-      like,
-      reply,
-      department,
-      email,
-      content,
-      title,
-      position,
-      read,
-      createdAt,
-      writer,
-    },
-  } = useRoute();
+const NoticeDetail = () => {
+  const { params: {id,like,reply,department,email,content,title,position,read,createdAt,writer,}} = useRoute();
   const { createdTime } = useSeparateTime(createdAt);
   const { controlLikes, createReply } = useNotice();
   const userInfo = useRecoilValue(userInfoState);
@@ -114,7 +100,7 @@ const NoticaDetail = () => {
   useEffect(() => {
     if (!writer) return;
     setIsMyLike(like.findIndex((item) => item === userInfo.email) >= 0);
-  }, [writer]);
+  }, []);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(firestore, 'Notice', id), (doc) => {
@@ -123,10 +109,11 @@ const NoticaDetail = () => {
     });
     return () => unsub();
   }, []);
-
+  console.log('===writer===',writer);
   return (
     <>
-      {writer ? (
+    
+      {writer && (
         <ScrollView style={styles.container} nestedScrollEnabled>
           <View
             style={{
@@ -134,10 +121,11 @@ const NoticaDetail = () => {
               alignItems: 'flex-start',
               borderBottomWidth: 2,
               borderBottomColor: '#ccc',
+              
             }}
           >
             <View style={{ flex: 3, marginTop:16 }}>
-              <NotoText style={{ fontSize: 20 }}>{title}</NotoText>
+              <NotoText style={{ fontSize: 20, color:'#fff' }}>{title}</NotoText>
             </View>
             <View
               style={{
@@ -153,11 +141,11 @@ const NoticaDetail = () => {
                   alignItems: 'center',
                 }}
               >
-                <NotoText style={{ fontSize: 12, color: '#aaa' }}>
+                <NotoText style={{ fontSize: 12, color: '#fff' }}>
                   조회수: {read}
                 </NotoText>
                 <View style={{ width: 8 }} />
-                <NotoText style={{ fontSize: 12, color: '#aaa' }}>
+                <NotoText style={{ fontSize: 12, color: '#fff' }}>
                   {createdTime.year}-
                   {createdTime.month >= 10
                     ? createdTime.month
@@ -175,7 +163,7 @@ const NoticaDetail = () => {
                     : '0' + createdTime.minutes}{' '}
                 </NotoText>
               </View>
-              <NotoText style={{ color: '#aaa' }}>
+              <NotoText style={{ color: '#fff' }}>
                 {writer} {position}
               </NotoText>
             </View>
@@ -198,13 +186,13 @@ const NoticaDetail = () => {
                 borderColor: '#f41',
               }}
             >
-              <NotoText style={{ fontSize: 12 }}>좋아요</NotoText>
+              <NotoText style={{ fontSize: 12, color:'#fff' }}>좋아요</NotoText>
               {isMyLike ? (
                 <AntDesign name="heart" size={20} color="#f41" />
               ) : (
-                <AntDesign name="hearto" size={20} color="#a7a7a7" />
+                <AntDesign name="hearto" size={20} color="#fff" />
               )}
-              <NotoText style={{color: (likeCount === 0 || !isMyLike) ? '#a7a7a7' : '#f41'}}>{likeCount}</NotoText>
+              <NotoText style={{color: (likeCount === 0 || !isMyLike) ? '#fff' : '#f41'}}>{likeCount}</NotoText>
             </Pressable>
           </View>
 
@@ -215,7 +203,7 @@ const NoticaDetail = () => {
               alignItems: 'flex-start',
             }}
           >
-            <NotoText>댓글({feeds.length})</NotoText>
+            <NotoText style={{color:'#fff'}}>댓글({feeds.length})</NotoText>
           </View>
           <ScrollView>
             {feeds.map((item) => (
@@ -256,14 +244,15 @@ const NoticaDetail = () => {
                 numberOfLines={4}
                 multiline={true}
                 style={{
-                  backgroundColor: '#fff',
+                  backgroundColor: '#bde0fe',
                   padding: 16,
                   borderWidth: 1,
                   borderRadius: 4,
-                  borderColor: '#2d63e2',
+                  borderColor: '#0cdae0',
                   width: '80%',
                 }}
                 placeholder=" 댓글을 적어주세요"
+                placeholderTextColor="#fff"
               />
               <View style={{ justifyContent: 'center', padding: 8 }}>
                 <TouchableOpacity
@@ -272,10 +261,10 @@ const NoticaDetail = () => {
                   disabled={isLoading}
                   style={{
                     borderWidth: 1,
-                    borderColor: '#2d63e2',
+                    borderColor: '#0cdae0',
                     borderRadius: 4,
                     paddingHorizontal: width > 330 ? 8 : 4,
-                    backgroundColor: '#fff',
+                    backgroundColor: '#0cdae0',
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
@@ -283,25 +272,23 @@ const NoticaDetail = () => {
                   {isLoading ? (
                     <ActivityIndicator />
                   ) : (
-                    <NotoText style={{ fontSize: 10 }}>작성하기</NotoText>
+                    <NotoText style={{ fontSize: 10, color:'#fff' }}>작성하기</NotoText>
                   )}
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </ScrollView>
-      ) : (
-        <Text>Nothing</Text>
       )}
     </>
   );
 };
 
-export default NoticaDetail;
+export default NoticeDetail;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     paddingHorizontal: 24,
   },
 });
