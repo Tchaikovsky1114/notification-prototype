@@ -6,7 +6,10 @@ import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import { CheckBox } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
-import { Touchable } from 'react-native';
+import 'moment/locale/ko'
+
+
+
 
 const DUMMY_EMAIL_DATA = [
   {
@@ -64,8 +67,8 @@ const Mail = () => {
       > */}
       {/* <Text>이메일 보내기</Text>
       </TouchableOpacity> */}
-      {DUMMY_EMAIL_DATA.map((item) => (
-        <View style={{flex:1,justifyContent:'space-between',alignItems:'center',paddingVertical:16,paddingHorizontal:8,borderWidth:1,borderColor:'#a7a7a7',marginVertical:4,marginHorizontal:24}}>
+      {DUMMY_EMAIL_DATA.map((item,index) => (
+        <View key={index} style={{flex:1,justifyContent:'space-between',alignItems:'center',paddingVertical:16,paddingHorizontal:8,borderWidth:1,borderColor:'#a7a7a7',marginVertical:4,marginHorizontal:24}}>
           <View style={{flex:1, flexDirection:'row'}}>
           <CheckBox />
           <TouchableOpacity style={{flex:8}}>
@@ -75,7 +78,7 @@ const Mail = () => {
           </TouchableOpacity>
           <TouchableOpacity style={{flex:3,justifyContent:'center',alignItems:'flex-end'}}>
             <Text>{item.sendDate}</Text>
-            <AntDesign name="flag" size={24} color="black" />
+            <AntDesign name="flag" size={24} color="#fff" />
           </TouchableOpacity>
           </View>
         </View>
@@ -89,6 +92,6 @@ export default Mail
 const styles = StyleSheet.create({
   container:{
     paddingTop:16,
-    backgroundColor:'#fff'
+    backgroundColor:'#000'
   }
 })

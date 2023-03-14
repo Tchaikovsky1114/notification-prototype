@@ -15,14 +15,14 @@ const RenderUserItem = ({item}) => {
     <TouchableOpacity
     onPress={navigateChatRoomHandler}
     activeOpacity={0.5}
-    style={{flex:1,padding:8,borderWidth:1}}
+    style={{flex:1,padding:8,borderWidth:1,marginTop:16,borderWidth:1, borderColor:'#fff',marginTop:40}}
     >
-    <View style={{borderBottomWidth:1, borderBottomColor:'#2d63e2'}}>
-    <NotoText style={{color:'#2d63e2'}}>{item.department}</NotoText>
+    <View style={{borderBottomWidth:1, borderBottomColor:'#0cdae0'}}>
+    <NotoText style={{color:'#0cdae0'}}>{item.department}</NotoText>
     </View>
     <View style={{marginTop:8}}>
-      <NotoText style={{fontSize:20}}>{item.name}</NotoText>
-      <NotoText style={{}}>{item.email}</NotoText>
+      <NotoText style={{fontSize:20,color:'#fff'}}>{item.name}</NotoText>
+      <NotoText style={{color:'#fff'}}>{item.email}</NotoText>
     </View>
   </TouchableOpacity>
   )

@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+
 import React from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Address from '../components/address/Address';
+
+const Stack = createNativeStackNavigator();
 
 const AddressScreen = () => {
   return (
-    <View>
-      <Text>AddressScreen</Text>
-    </View>
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="AddressList" component={Address} />
+    </Stack.Navigator>
   )
 }
 
 export default AddressScreen
-
-const styles = StyleSheet.create({})

@@ -17,6 +17,7 @@ import { Text } from 'react-native';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import NotoText from '../components/common/NotoText';
+
 const Drawer = createDrawerNavigator();
 
 
@@ -29,7 +30,9 @@ const CustomDrawer = props => {
           flex:1,
           backgroundColor: "white",
           marginTop:-8,
-          }}>
+          }}
+        
+          >
 
         <View
           style={{
@@ -37,7 +40,7 @@ const CustomDrawer = props => {
             flexDirection: "row",
             padding: 16,
             marginBottom:8,
-            backgroundColor: "#2d63e2",
+            backgroundColor: "#0cdae0",
             alignItems: "center",
           }}>
             <NotoText style={{color:'#fff',fontSize:24,lineHeight:32}}>성원 Works</NotoText>
@@ -65,16 +68,24 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator screenOptions={{
       headerTransparent:true,
-      headerTitleStyle:{color:'#fff',fontSize:4},
-      drawerInactiveTintColor:'#a7a7a7',
+      headerTitleStyle:{color:'#fff',fontSize:0},
+      drawerActiveTintColor:'#0cdae0',
       drawerType:'back',
+      headerBackgroundContainerStyle:{
+        backgroundColor:'#000'
+      },
+      headerTintColor:'#fff',
+      headerShadowVisible:false,
       }}
       drawerContent={(props) => <CustomDrawer {...props} /> }
       
       >
-      <Drawer.Screen name="Main" component={BottomNavigator} options={{}} />
-      {userInfo &&
-        <>
+    {!userInfo 
+    ? 
+    <Drawer.Screen name="Overview" component={BottomNavigator} options={{title:'Home'}} /> 
+    :
+    <>
+      <Drawer.Screen name="Overview" component={BottomNavigator} options={{title:'Home'}} />
       <Drawer.Screen name="Mail" component={MailScreen} options={{title:'메일'}} />
       <Drawer.Screen name="Calendar" component={CalendarScreen} options={{title:'달력'}} />
       <Drawer.Screen name="Works" component={WorksScreen} options={{title:'진행 업무'}} />
@@ -85,9 +96,10 @@ const DrawerNavigator = () => {
       <Drawer.Screen name="Community" component={CommunityScreen} options={{title: '커뮤니티'}} />
       <Drawer.Screen name="DocumentManagement" component={DocumentManagementScreen} options={{title: '문서관리'}} />
       <Drawer.Screen name="OrganizationChart" component={OrganizationChartScreen} options={{title: '조직도'}} />
-      </>
+    </>
       }
     </Drawer.Navigator>
+    
   )
 }
 

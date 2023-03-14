@@ -26,6 +26,7 @@ const RichTextEditor = () => {
   const [isShow,setIsShow] = useRecoilState(writeNoticeModalState);
   const [image,setImage] = useState('');
   const [totalImages,setTotalImages] = useState([]);
+
   const richTextHandler = (text) => {
     if(text) {
       setInputvalue(text)
@@ -35,10 +36,10 @@ const RichTextEditor = () => {
       setIsEmpty(true);
     }
   }
+
   const changeTitleHandler = (text) => {
     setTitle(text);
   }
-
 
   const submitNoticeHandler = () => {
     // fetchNotice(title,inputValue)
@@ -63,7 +64,6 @@ const RichTextEditor = () => {
       console.log('uploaded a blob or file!');
     })
     // const storageRef = ref(storage,`${imageName}`);
-    
   }
 
   const addImageHandler = async () => {
@@ -81,7 +81,6 @@ const RichTextEditor = () => {
       if(!result.canceled){
         const offset = 1000 * 60 * 60 * 9;
         const koreaTime = new Date((new Date()).getTime() + offset).toISOString().replace("T"," ").split('.')[0];
-        
         const storageRef = ref(storage,`images/${userInfo.name}/${koreaTime}`);
         await uploadImage(result.assets[0].uri,`images/${userInfo.name}/${koreaTime}`)
         .then(async () => {
@@ -89,7 +88,6 @@ const RichTextEditor = () => {
           return downloadUrl;
         })
         .then((url) => {
-          
           setImage(url);
         });
       }
@@ -112,13 +110,14 @@ const RichTextEditor = () => {
           value={title}
           onChangeText={changeTitleHandler}
           placeholder="공지사항 제목을 입력해주세요."
-          style={{position:'relative',fontSize:20,paddingHorizontal:8,borderBottomWidth:1, borderBottomColor:'#2d63e2',height:53}}
+          style={{position:'relative',fontSize:20,paddingHorizontal:8,borderBottomWidth:1, borderBottomColor:'#0cdae0',height:53}}
         />
       </View>
     <RichToolbar
    editor={richText}
-   selectedIconTint="#2d63e2"
+   selectedIconTint="#0cdae0"
    iconTint="#f6f9ff"
+   
    actions={[
      actions.undo,
      actions.redo,
@@ -133,6 +132,7 @@ const RichTextEditor = () => {
    ]}
    onPressAddImage={addImageHandler}
    style={styles.richTextToolbarStyle}
+   
   />
     <RichEditor
       ref={richText}
@@ -147,7 +147,7 @@ const RichTextEditor = () => {
     </KeyboardAvoidingView>
     <Pressable
     onPress={submitNoticeHandler}
-    style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#2d63e2',alignItems:'center',justifyContent:'center'}}
+    style={{height:53,position:'absolute',bottom:0,width:'100%',backgroundColor:'#0cdae0',alignItems:'center',justifyContent:'center'}}
     >
       <NotoText style={{fontSize:24,textAlign:'center',color:'#fff'}}>게시하기</NotoText>
     </Pressable>
@@ -168,15 +168,15 @@ const styles = StyleSheet.create({
 
   headerStyle: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "#312921",
+    fontWeight: "Noto600",
+    color: "#fff",
     marginBottom: 10,
   },
 
   htmlBoxStyle: {
     height: 200,
     width: 330,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
     borderRadius: 10,
     padding: 20,
     marginBottom: 10,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
 
   textButtonStyle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#312921",
+    fontWeight: "Noto600",
+    color: "#fff",
   },
 });

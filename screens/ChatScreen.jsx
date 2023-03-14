@@ -8,10 +8,11 @@ const Stack = createNativeStackNavigator();
 
 const ChatScreen = () => {
   return (
+    
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="Chat" component={Chat} />
-      <Stack.Screen name="ChatRoom" component={ChatRoom} />
-    </Stack.Navigator>
+       <Stack.Screen name="ChatList" component={Chat} />
+       <Stack.Screen name="ChatRoom" component={ChatRoom} />
+     </Stack.Navigator>
   )
 }
 

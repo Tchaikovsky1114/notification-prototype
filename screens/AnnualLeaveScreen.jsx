@@ -7,7 +7,7 @@ const Stack = createNativeStackNavigator()
 const AnnualLeaveScreen = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="AnnualLeave" component={AnnualLeave} />
+      <Stack.Screen name="AnnualLeaveDashBoard" component={AnnualLeave} />
     </Stack.Navigator>
   )
 }

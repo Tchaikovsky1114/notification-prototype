@@ -19,7 +19,7 @@ const useAttendance = () => {
           }
         })
         const data = await response.json();
-        console.log(data);
+        
         return data; 
       } catch (error) {
         console.error(error);
@@ -59,7 +59,6 @@ const getAttendance = async (email) => {
       }
     })
     const data = await response.json();
-    console.log(data);
     setAttendance(data.attendance);
     return data; 
   } catch (error) {

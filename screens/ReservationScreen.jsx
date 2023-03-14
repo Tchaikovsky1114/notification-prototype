@@ -11,4 +11,3 @@ const ReservationScreen = () => {
 
 export default ReservationScreen
 
-const styles = StyleSheet.create({})
